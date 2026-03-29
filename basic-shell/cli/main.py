@@ -3,6 +3,9 @@ import sys
 import os
 import zipfile
 import shutil
+import http.server
+import socketserver
+import webbrowser
 from jsonschema import validate, ValidationError
 
 # Base directory for schemas
@@ -11,12 +14,10 @@ SCHEMA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'schema')
 def load_schema(schema_name):
     schema_path = os.path.join(SCHEMA_DIR, f"{schema_name}.json")
     if not os.path.exists(schema_path):
-        # Handle common naming/typo fallbacks
-        fallbacks = {
-            "warranty": "warrenty",
-            "manifest": "h3_manifest"
-        }
-        schema_path = os.path.join(SCHEMA_DIR, f"{fallbacks.get(schema_name, schema_name)}.json")
+        # Handle manifest naming fallback
+        if schema_name == "manifest":
+            schema_path = os.path.join(SCHEMA_DIR, "h3_manifest.json")
+        
         if not os.path.exists(schema_path):
             return None
     
@@ -85,6 +86,23 @@ def unpack_h3(pkg_file, dest_dir=None):
     except Exception as e:
         print(f"❌ Error unpacking: {e}")
 
+def serve_viewer(port=8000):
+    """Starts a local web server to view the dashboard."""
+    root_dir = os.path.join(os.path.dirname(__file__), '..', '..')
+    os.chdir(root_dir)
+    
+    Handler = http.server.SimpleHTTPRequestHandler
+    
+    try:
+        with socketserver.TCPServer(("", port), Handler) as httpd:
+            url = f"http://localhost:{port}"
+            print(f"🚀 H3 Dashboard active at: {url}")
+            print("Press Ctrl+C to stop the server.")
+            webbrowser.open(url)
+            httpd.serve_forever()
+    except Exception as e:
+        print(f"❌ Could not start server: {e}")
+
 def show_help():
     print("H3 Core CLI Tool")
     print("----------------")
@@ -92,6 +110,7 @@ def show_help():
     print("  validate <file> [type]   Validate JSON against H3 schema")
     print("  pack <dir> [output]      Pack a folder into an .h3pkg container")
     print("  unpack <file> [dest]     Unpack an .h3pkg container")
+    print("  serve [port]             Start the visual dashboard viewer")
     print("\nEntity types for validation:")
     print("  building, asset, space, event, contracts, warranty, manifest")
 
@@ -108,5 +127,8 @@ if __name__ == "__main__":
         pack_h3(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
     elif cmd == "unpack" and len(sys.argv) >= 3:
         unpack_h3(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
+    elif cmd == "serve":
+        port = int(sys.argv[2]) if len(sys.argv) > 2 else 8000
+        serve_viewer(port)
     else:
         show_help()
