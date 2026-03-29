@@ -1,0 +1,11 @@
+[
+  {
+    "schema_version": "1.0",
+    "warranty_id": "warranty_001",
+    "asset_id": "NL.BAG.987654321:boiler:001",
+    "supplier_id": "supplier_001",
+    "start_date": "2025-03-15",
+    "end_date": "2027-03-15",
+    "terms": "2 jaar fabrieksgarantie"
+  }
+]

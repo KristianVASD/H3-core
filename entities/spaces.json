@@ -1,0 +1,18 @@
+[
+  {
+    "schema_version": "1.0",
+    "space_id": "NL.BAG.987654321:ground_floor",
+    "building_id": "NL.BAG.987654321",
+    "name": "Begane grond",
+    "type": "floor",
+    "floor": 0
+  },
+  {
+    "schema_version": "1.0",
+    "space_id": "NL.BAG.987654321:living_room",
+    "building_id": "NL.BAG.987654321",
+    "name": "Woonkamer",
+    "type": "room",
+    "floor": 0
+  }
+]

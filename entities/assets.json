@@ -1,0 +1,50 @@
+[
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.987654321:door_closer:001",
+    "building_id": "NL.BAG.987654321",
+    "space_id": "NL.BAG.987654321:ground_floor",
+    "type": "door_closer",
+    "subtype": "hydraulic",
+    "status": "active",
+    "condition_score": 9.0,
+    "lifecycle": {
+      "installed_at": "2025-03-15",
+      "expected_lifespan_years": 10
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.987654321:kitchen:001",
+    "building_id": "NL.BAG.987654321",
+    "space_id": "NL.BAG.987654321:ground_floor",
+    "type": "kitchen",
+    "status": "active",
+    "condition_score": 9.5,
+    "specifications": {
+      "brand": "IKEA",
+      "model": "METOD"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.987654321:boiler:001",
+    "building_id": "NL.BAG.987654321",
+    "type": "boiler",
+    "status": "active",
+    "condition_score": 9.2,
+    "lifecycle": {
+      "installed_at": "2025-03-15",
+      "expected_lifespan_years": 15
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.987654321:window:001",
+    "building_id": "NL.BAG.987654321",
+    "type": "window",
+    "subtype": "triple_glass",
+    "status": "active",
+    "condition_score": 9.8
+  }
+]

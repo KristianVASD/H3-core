@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "H3 Asset",
+  "type": "object",
+  "required": ["schema_version", "asset_id", "building_id", "type"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "Format: BUILDING_ID:TYPE:SEQUENCE"
+    },
+    "building_id": {
+      "type": "string"
+    },
+    "space_id": {
+      "type": "string"
+    },
+
+    "type": {
+      "type": "string"
+    },
+    "subtype": {
+      "type": "string"
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["active", "inactive", "removed", "planned"]
+    },
+
+    "condition_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+
+    "lifecycle": {
+      "type": "object",
+      "properties": {
+        "installed_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "expected_lifespan_years": {
+          "type": "integer"
+        },
+        "end_of_life_estimate": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+
+    "specifications": {
+      "type": "object",
+      "properties": {
+        "brand": { "type": "string" },
+        "model": { "type": "string" },
+        "serial_number": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+
+    "location": {
+      "type": "object",
+      "properties": {
+        "floor": { "type": "integer" },
+        "zone": { "type": "string" }
+      }
+    },
+
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "parent_asset_id": { "type": "string" },
+        "child_assets": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "contracts": {
+      "type": "object",
+      "properties": {
+        "warranty_id": { "type": "string" },
+        "supplier_id": { "type": "string" },
+        "maintenance_contract_id": { "type": "string" }
+      }
+    },
+
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

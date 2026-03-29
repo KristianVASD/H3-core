@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "package_id": "pkg_nl_001",
+  "created_at": "2026-03-28T10:00:00Z",
+  "created_by": "h3-demo-generator",
+
+  "building_ref": "NL.BAG.987654321",
+
+  "entities": {
+    "buildings": "entities/buildings.json",
+    "spaces": "entities/spaces.json",
+    "assets": "entities/assets.json",
+    "events": "entities/events.json",
+    "contracts": "entities/contracts.json",
+    "warranties": "entities/warranties.json"
+  },
+
+  "files": {
+    "base_path": "files/",
+    "link_file": "links/file_links.json"
+  },
+
+  "stats": {
+    "asset_count": 6,
+    "event_count": 2,
+    "file_count": 4
+  }
+}

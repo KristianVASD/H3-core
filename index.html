@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H3 Core • Open Building Standard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS (via CDN voor lokaal gebruik) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            400: '#2dd4bf', // Teal 400
+                            500: '#14b8a6', // Teal 500
+                            900: '#134e4a', // Teal 900
+                        },
+                        dark: {
+                            bg: '#0f172a',    // Slate 900
+                            card: '#1e293b',  // Slate 800
+                            border: '#334155' // Slate 700
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar voor een premium feel */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        body { background-color: #0f172a; color: #f8fafc; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid #334155; }
+        
+        /* Fade in animatie */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="h-screen w-full flex overflow-hidden font-sans">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 glass-panel border-r border-dark-border flex flex-col justify-between z-20">
+        <div>
+            <!-- Logo Area -->
+            <div class="h-20 flex items-center px-6 border-b border-dark-border">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-blue-500 flex items-center justify-center mr-3 shadow-lg shadow-brand-500/20">
+                    <i class="fa-solid fa-cube text-white text-sm"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-bold text-xl tracking-tight">H3 Core</h1>
+                    <p class="text-[10px] text-brand-400 font-mono tracking-widest uppercase mt-0.5">Basic Shell</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="p-4 space-y-1">
+                <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-brand-500/10 text-brand-400">
+                    <i class="fa-solid fa-chart-pie w-6"></i> Dashboard
+                </button>
+                <button onclick="switchView('assets')" id="nav-assets" class="nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:text-slate-100 hover:bg-slate-800">
+                    <i class="fa-solid fa-layer-group w-6"></i> Assets
+                </button>
+                <button onclick="switchView('events')" id="nav-events" class="nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:text-slate-100 hover:bg-slate-800">
+                    <i class="fa-solid fa-clipboard-list w-6"></i> Events
+                </button>
+                <button onclick="switchView('manifest')" id="nav-manifest" class="nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:text-slate-100 hover:bg-slate-800">
+                    <i class="fa-solid fa-code w-6"></i> Raw JSON
+                </button>
+            </nav>
+        </div>
+
+        <!-- Upgrade Teaser Area -->
+        <div class="p-4">
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-4 relative overflow-hidden group cursor-pointer hover:border-brand-500 transition-colors" onclick="alert('In de toekomst activeert dit de verbinding met de DossierMind API voor automatische AI import en Hebbian Learning.')">
+                <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="fa-solid fa-microchip text-4xl text-brand-400"></i>
+                </div>
+                <h4 class="font-heading font-semibold text-sm mb-1 text-white">Unlock Full AI</h4>
+                <p class="text-xs text-slate-400 mb-3 leading-relaxed">Upgrade to DossierMind for auto-ZIP parsing & contractor matching.</p>
+                <div class="text-xs font-semibold text-brand-400 flex items-center">
+                    Enable Smart Mode <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </div>
+            
+            <div class="mt-4 flex justify-between items-center px-2 text-xs text-slate-500">
+                <span>v1.0.0 Open Source</span>
+                <i class="fa-brands fa-github text-lg hover:text-white cursor-pointer" onclick="window.open('https://github.com/jouwusername/h3-core')"></i>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col relative overflow-hidden">
+        
+        <!-- Header -->
+        <header class="h-20 border-b border-dark-border flex items-center justify-between px-8 bg-dark-bg/80 backdrop-blur-md z-10 relative">
+            <div class="flex items-center gap-4">
+                <div class="bg-slate-800 border border-slate-700 rounded-full px-4 py-2 flex items-center w-64 focus-within:border-brand-400 focus-within:ring-1 focus-within:ring-brand-400 transition-all">
+                    <i class="fa-solid fa-search text-slate-400 text-sm"></i>
+                    <input type="text" placeholder="Search building data..." class="bg-transparent border-none outline-none text-sm ml-2 w-full text-slate-200 placeholder-slate-500">
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="exportData()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm font-medium transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i> Export H3
+                </button>
+                <button onclick="openAddAssetModal()" class="px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-900 text-sm font-semibold transition-colors flex items-center gap-2 shadow-lg shadow-brand-500/20">
+                    <i class="fa-solid fa-plus"></i> Add Asset
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <div id="app-content" class="flex-1 overflow-y-auto p-8 relative">
+            <!-- Content gets injected here -->
+        </div>
+
+    </main>
+
+    <!-- Modal: Add Asset (Hidden by default) -->
+    <div id="asset-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity">
+        <div class="bg-dark-card border border-dark-border rounded-2xl w-full max-w-md p-6 transform scale-95 transition-transform" id="asset-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-heading font-bold text-xl">Add New Asset</h3>
+                <button onclick="closeAddAssetModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Asset Name / Type</label>
+                    <input type="text" id="new-asset-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-brand-400 outline-none" placeholder="e.g. Door Closer, Heat Pump">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Location (Space)</label>
+                    <input type="text" id="new-asset-space" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-brand-400 outline-none" placeholder="e.g. Living Room, Technical Room">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Condition Score (1-10)</label>
+                    <input type="number" id="new-asset-condition" min="1" max="10" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-brand-400 outline-none" value="10">
+                </div>
+                <button onclick="saveNewAsset()" class="w-full py-3 mt-2 rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-900 font-semibold transition-colors">
+                    Save to Memory
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. STATE & MOCK DATA
+        // Zelfs als er lokaal geen JSON is, werkt de demo hierdoor fantastisch.
+        let h3Data = {
+            building: {
+                id: "NL.BAG.0363010001234567",
+                name: "Nieuwbouw Woning - De Groene Oase",
+                address: "Amstelstraat 12",
+                city: "Amsterdam",
+                construction_year: 2025
+            },
+            assets:[
+                { id: "A-001", type: "Heat Pump", location: "Tech Room", condition: 9, status: "active", installed: "2025-01-10" },
+                { id: "A-002", type: "Door Closer", location: "Main Entrance", condition: 6, status: "maintenance_needed", installed: "2025-02-15" },
+                { id: "A-003", type: "Solar Inverter", location: "Roof", condition: 10, status: "active", installed: "2025-01-20" }
+            ],
+            events:[
+                { id: "E-001", asset_id: "A-002", type: "failure", date: "2026-03-20", desc: "Hydraulic leak on door closer", status: "open" },
+                { id: "E-002", asset_id: "A-001", type: "inspection", date: "2026-01-10", desc: "Yearly maintenance check. All nominal.", status: "closed" }
+            ]
+        };
+
+        let currentView = 'dashboard';
+
+        // Probeer lokale data te fetchen (overschrijft mock data indien succesvol)
+        async function loadLocalFiles() {
+            try {
+                // Hier zou normaal de logica zitten om manifest.json etc op te halen
+                // const res = await fetch('manifest/minimal_manifest.json');
+                // if(res.ok) { h3Data = await res.json(); }
+                console.log("H3 Data Loaded. Ready to render.");
+            } catch (e) {
+                console.log("Using embedded fallback data.");
+            }
+            renderView();
+        }
+
+        // 2. VIEW SWITCHING LOGIC
+        function switchView(view) {
+            currentView = view;
+            
+            // Update sidebar active states
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:text-slate-100 hover:bg-slate-800";
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            activeBtn.className = "nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-brand-500/10 text-brand-400";
+
+            renderView();
+        }
+
+        // 3. RENDERING ENGINE
+        function renderView() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+
+            if (currentView === 'dashboard') {
+                container.innerHTML = `
+                    <div class="fade-in max-w-5xl mx-auto">
+                        <div class="mb-8">
+                            <h2 class="font-heading text-3xl font-bold mb-1">${h3Data.building.name}</h2>
+                            <p class="text-slate-400"><i class="fa-solid fa-location-dot mr-2"></i>${h3Data.building.address}, ${h3Data.building.city} • Built ${h3Data.building.construction_year}</p>
+                        </div>
+
+                        <!-- Stats Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="glass-panel rounded-2xl p-6">
+                                <div class="text-slate-400 text-sm font-medium mb-4 flex justify-between">Total Assets <i class="fa-solid fa-layer-group text-slate-500"></i></div>
+                                <div class="text-4xl font-heading font-bold text-white">${h3Data.assets.length}</div>
+                            </div>
+                            <div class="glass-panel rounded-2xl p-6">
+                                <div class="text-slate-400 text-sm font-medium mb-4 flex justify-between">Open Events <i class="fa-solid fa-triangle-exclamation text-amber-500"></i></div>
+                                <div class="text-4xl font-heading font-bold text-white">${h3Data.events.filter(e => e.status === 'open').length}</div>
+                            </div>
+                            <div class="glass-panel rounded-2xl p-6">
+                                <div class="text-slate-400 text-sm font-medium mb-4 flex justify-between">Avg Condition <i class="fa-solid fa-heart-pulse text-brand-400"></i></div>
+                                <div class="text-4xl font-heading font-bold text-brand-400">
+                                    ${(h3Data.assets.reduce((sum, a) => sum + parseInt(a.condition), 0) / h3Data.assets.length).toFixed(1)} <span class="text-lg text-slate-500">/ 10</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini recent events -->
+                        <h3 class="font-heading text-lg font-semibold mb-4 mt-10">Recent Events</h3>
+                        <div class="space-y-3">
+                            ${h3Data.events.map(e => `
+                                <div class="glass-panel rounded-xl p-4 flex items-center justify-between border-l-4 ${e.status === 'open' ? 'border-amber-500' : 'border-slate-600'}">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center">
+                                            <i class="fa-solid ${e.type === 'failure' ? 'fa-wrench text-amber-500' : 'fa-check text-brand-400'}"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-white">${e.desc}</div>
+                                            <div class="text-xs text-slate-400">Asset: ${e.asset_id} • ${e.date}</div>
+                                        </div>
+                                    </div>
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium ${e.status === 'open' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-700 text-slate-300'} uppercase tracking-wider">${e.status}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (currentView === 'assets') {
+                container.innerHTML = `
+                    <div class="fade-in max-w-5xl mx-auto">
+                        <div class="flex justify-between items-end mb-6">
+                            <div>
+                                <h2 class="font-heading text-3xl font-bold mb-1">Asset Inventory</h2>
+                                <p class="text-slate-400">All physical components structured in H3.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel rounded-2xl overflow-hidden">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-800/50 border-b border-dark-border text-xs uppercase tracking-wider text-slate-400">
+                                        <th class="p-4 font-medium">ID</th>
+                                        <th class="p-4 font-medium">Type</th>
+                                        <th class="p-4 font-medium">Location</th>
+                                        <th class="p-4 font-medium">Condition</th>
+                                        <th class="p-4 font-medium">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm divide-y divide-dark-border">
+                                    ${h3Data.assets.map(a => `
+                                        <tr class="hover:bg-slate-800/30 transition-colors">
+                                            <td class="p-4 font-mono text-brand-400 text-xs">${a.id}</td>
+                                            <td class="p-4 font-medium text-white">${a.type}</td>
+                                            <td class="p-4 text-slate-300">${a.location}</td>
+                                            <td class="p-4">
+                                                <div class="flex items-center gap-2">
+                                                    <div class="w-16 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                                        <div class="h-full ${a.condition >= 8 ? 'bg-brand-500' : a.condition >= 5 ? 'bg-amber-500' : 'bg-rose-500'}" style="width: ${a.condition * 10}%"></div>
+                                                    </div>
+                                                    <span class="text-xs text-slate-400">${a.condition}/10</span>
+                                                </div>
+                                            </td>
+                                            <td class="p-4">
+                                                <span class="px-2.5 py-1 rounded-full text-xs font-medium ${a.status === 'active' ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}">${a.status.replace('_', ' ')}</span>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            } else if (currentView === 'manifest') {
+                container.innerHTML = `
+                    <div class="fade-in max-w-5xl mx-auto h-full flex flex-col">
+                        <div class="mb-4 flex justify-between items-center">
+                            <h2 class="font-heading text-2xl font-bold">H3 Raw Memory</h2>
+                            <span class="text-xs text-brand-400 font-mono bg-brand-500/10 px-3 py-1 rounded-full">Schema v1.0</span>
+                        </div>
+                        <div class="flex-1 glass-panel rounded-2xl p-6 overflow-auto">
+                            <pre class="font-mono text-sm text-slate-300"><code>${JSON.stringify(h3Data, null, 4)}</code></pre>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Placeholder voor Events tab
+                container.innerHTML = `<div class="fade-in flex items-center justify-center h-full text-slate-500 italic">Details voor ${currentView} view...</div>`;
+            }
+        }
+
+        // 4. ADD ASSET (IN-MEMORY "SAVE" DEMO)
+        const modal = document.getElementById('asset-modal');
+        const modalContent = document.getElementById('asset-modal-content');
+
+        function openAddAssetModal() {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeAddAssetModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // clear inputs
+                document.getElementById('new-asset-type').value = '';
+                document.getElementById('new-asset-space').value = '';
+            }, 300);
+        }
+
+        function saveNewAsset() {
+            const type = document.getElementById('new-asset-type').value;
+            const space = document.getElementById('new-asset-space').value;
+            const condition = document.getElementById('new-asset-condition').value;
+
+            if(!type) return alert("Please enter an asset type");
+
+            // Voeg toe aan ons 'werkgeheugen' (H3 data object)
+            const newId = `A-00${h3Data.assets.length + 1}`;
+            h3Data.assets.push({
+                id: newId,
+                type: type,
+                location: space || "Unknown",
+                condition: parseInt(condition),
+                status: "active",
+                installed: new Date().toISOString().split('T')[0]
+            });
+
+            closeAddAssetModal();
+            
+            // Als we op de assets tab zitten, ververs deze direct
+            if(currentView === 'assets' || currentView === 'dashboard') {
+                renderView();
+            }
+
+            // Simuleer een succesvolle "save" notificatie
+            showToast(`Asset ${newId} saved to memory!`);
+        }
+
+        // 5. EXPORT FUNCTION (Dit is de magische oplossing voor lokale apps!)
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(h3Data, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("download", "h3_export_" + new Date().getTime() + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            
+            showToast("H3 Package gedownload!");
+        }
+
+        // Helper: Simple Toast Notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-8 right-8 bg-brand-500 text-slate-900 px-6 py-3 rounded-xl font-medium shadow-lg shadow-brand-500/20 transform transition-all translate-y-10 opacity-0 z-50";
+            toast.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); }, 10);
+            setTimeout(() => { 
+                toast.classList.add('translate-y-10', 'opacity-0'); 
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Initialize
+        loadLocalFiles();
+
+    </script>
+</body>
+</html>

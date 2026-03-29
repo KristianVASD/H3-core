@@ -1,0 +1,12 @@
+[
+  {
+    "schema_version": "1.0",
+    "building_id": "NL.BAG.987654321",
+    "name": "Nieuwbouw Woning - De Groene Oase",
+    "address": "Laan van Toekomst 12",
+    "city": "Amsterdam",
+    "construction_year": 2025,
+    "function": ["residential"],
+    "created_at": "2025-03-15T10:00:00Z"
+  }
+]

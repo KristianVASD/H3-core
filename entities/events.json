@@ -1,0 +1,30 @@
+[
+  {
+    "schema_version": "1.0",
+    "event_id": "event_001",
+    "asset_id": "NL.BAG.987654321:door_closer:001",
+    "building_id": "NL.BAG.987654321",
+    "event_type": "complaint",
+    "description": "Deur sluit te hard",
+    "reported_by": "homeowner",
+    "reported_at": "2026-02-10T09:00:00Z",
+    "status": "resolved",
+    "severity": "low",
+    "resolution": {
+      "resolved_at": "2026-02-12T12:00:00Z",
+      "resolved_by": "contractor_001",
+      "action_taken": "Afstelling deurdranger"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "event_002",
+    "asset_id": "NL.BAG.987654321:boiler:001",
+    "building_id": "NL.BAG.987654321",
+    "event_type": "inspection",
+    "description": "Eerste jaarlijkse inspectie",
+    "reported_at": "2026-03-01T10:00:00Z",
+    "status": "closed",
+    "severity": "low"
+  }
+]

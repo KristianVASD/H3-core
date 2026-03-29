@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "H3 Manifest",
+  "type": "object",
+  "required": ["schema_version", "package_id", "created_at", "entities"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+
+    "package_id": {
+      "type": "string"
+    },
+
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "created_by": {
+      "type": "string"
+    },
+
+    "building_ref": {
+      "type": "string"
+    },
+
+    "entities": {
+      "type": "object",
+      "properties": {
+        "buildings": { "type": "string" },
+        "spaces": { "type": "string" },
+        "assets": { "type": "string" },
+        "events": { "type": "string" },
+        "contracts": { "type": "string" },
+        "warranties": { "type": "string" }
+      }
+    },
+
+    "files": {
+      "type": "object",
+      "properties": {
+        "base_path": {
+          "type": "string",
+          "default": "files/"
+        },
+        "link_file": {
+          "type": "string",
+          "default": "links/file_links.json"
+        }
+      }
+    },
+
+    "stats": {
+      "type": "object",
+      "properties": {
+        "asset_count": { "type": "integer" },
+        "event_count": { "type": "integer" },
+        "file_count": { "type": "integer" }
+      }
+    },
+
+    "integrity": {
+      "type": "object",
+      "properties": {
+        "checksum": { "type": "string" },
+        "hash_algorithm": {
+          "type": "string",
+          "default": "sha256"
+        }
+      }
+    }
+  }
+}

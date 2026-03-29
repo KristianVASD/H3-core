@@ -1,0 +1,11 @@
+[
+  {
+    "schema_version": "1.0",
+    "contract_id": "contract_001",
+    "building_id": "NL.BAG.987654321",
+    "supplier_id": "supplier_001",
+    "type": "maintenance",
+    "start_date": "2025-03-15",
+    "end_date": "2030-03-15"
+  }
+]

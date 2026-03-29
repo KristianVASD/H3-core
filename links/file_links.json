@@ -1,0 +1,16 @@
+{
+  "links": [
+    {
+      "file_path": "files/manuals/boiler_manual.pdf",
+      "entity_type": "asset",
+      "entity_id": "NL.BAG.987654321:boiler:001",
+      "relation": "manual"
+    },
+    {
+      "file_path": "files/photos/door_issue.jpg",
+      "entity_type": "event",
+      "entity_id": "event_001",
+      "relation": "evidence"
+    }
+  ]
+}
