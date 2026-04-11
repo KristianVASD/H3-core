@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "H3 Source",
+  "description": "A provenance record for an ingested document, drawing, capture, or other primary material inside an .h3pkg.",
+  "type": "object",
+  "required": ["source_id", "type", "file_path", "ingested_at"],
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "description": "Stable identifier referenced by entity evidence blocks."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["document", "technical_drawing", "user_input", "sensor_data", "photo"]
+    },
+    "file_path": {
+      "type": "string",
+      "description": "Path relative to package root, typically under files/ in the .h3pkg."
+    },
+    "description": {
+      "type": "string"
+    },
+    "ingested_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": true
+}

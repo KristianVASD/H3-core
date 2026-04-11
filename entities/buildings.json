@@ -8,5 +8,35 @@
     "construction_year": 2025,
     "function": ["residential"],
     "created_at": "2025-03-15T10:00:00Z"
+  },
+  {
+    "schema_version": "1.0",
+    "building_id": "NL.BAG.0599010000234567",
+    "name": "Kantoorpand De Haven",
+    "address": "Havenstraat 44",
+    "city": "Rotterdam",
+    "postal": "3011 AC",
+    "construction_year": 2002,
+    "function": ["office"],
+    "gfa": 4800,
+    "value": 3200000,
+    "description": "6-verdiepingen kantoorpand bij de Maas. Lift, parkeerkelder, centrale HVAC.",
+    "type": "🏢",
+    "created_at": "2026-03-30T10:00:00Z"
+  },
+  {
+    "schema_version": "1.0",
+    "building_id": "NL.BAG.0363010001234567",
+    "name": "Wooncomplex Oosterpark",
+    "address": "Oosterpark 8-36",
+    "city": "Amsterdam",
+    "postal": "1092 AB",
+    "construction_year": 1978,
+    "function": ["residential"],
+    "gfa": 2200,
+    "value": 8500000,
+    "description": "Sociale huurwoningen uit 1978. 14 appartementen. VvE actief. Asbestsanering afgerond 2019.",
+    "type": "🏠",
+    "created_at": "2026-03-30T10:00:00Z"
   }
 ]

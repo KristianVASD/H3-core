@@ -28,7 +28,7 @@
 
     "status": {
       "type": "string",
-      "enum": ["active", "inactive", "removed", "planned"]
+      "enum": ["active", "inactive", "removed", "planned", "maintenance_needed"]
     },
 
     "condition_score": {
@@ -80,6 +80,35 @@
           "type": "array",
           "items": { "type": "string" }
         }
+      }
+    },
+
+    "evidence": {
+      "type": "array",
+      "description": "Provenance: each observation may cite one or more ingested sources.",
+      "items": {
+        "type": "object",
+        "required": ["source_id"],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "description": "References source_id in the package sources list."
+          },
+          "note": {
+            "type": "string",
+            "description": "Human-readable anchor, e.g. page or drawing coordinates."
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "extracted_by": {
+            "type": "string",
+            "description": "Extractor id, e.g. agent_vision_v2 or user_upload."
+          }
+        },
+        "additionalProperties": true
       }
     },
 

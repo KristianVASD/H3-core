@@ -8,6 +8,22 @@ import socketserver
 import webbrowser
 from jsonschema import validate, ValidationError
 
+
+def _reconfigure_stdio_utf8():
+    """Avoid UnicodeEncodeError on Windows (cp1252) when printing CLI symbols."""
+    if sys.platform != "win32":
+        return
+    for name in ("stdout", "stderr"):
+        stream = getattr(sys, name, None)
+        if stream is not None and hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (AttributeError, OSError, ValueError):
+                pass
+
+
+_reconfigure_stdio_utf8()
+
 # Base directory for schemas
 SCHEMA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'schema')
 
@@ -17,12 +33,13 @@ def load_schema(schema_name):
         # Handle manifest naming fallback
         if schema_name == "manifest":
             schema_path = os.path.join(SCHEMA_DIR, "h3_manifest.json")
-        
+
         if not os.path.exists(schema_path):
             return None
-    
+
     with open(schema_path, 'r', encoding='utf-8') as f:
         return json.load(f)
+
 
 def validate_h3(file_path, entity_type=None):
     """Validates an H3 JSON file against its schema."""
@@ -87,13 +104,57 @@ def unpack_h3(pkg_file, dest_dir=None):
     except Exception as e:
         print(f"❌ Error unpacking: {e}")
 
+def _find_manifest_path(package_dir):
+    package_dir = os.path.abspath(package_dir)
+    for candidate in (
+        os.path.join(package_dir, 'manifest.json'),
+        os.path.join(package_dir, 'minimal_manifest.json'),
+        os.path.join(package_dir, 'manifest', 'minimal_manifest.json'),
+    ):
+        if os.path.exists(candidate):
+            return candidate
+    return None
+
+
+def _package_root_for_manifest(manifest_path):
+    manifest_path = os.path.abspath(manifest_path)
+    parent = os.path.dirname(manifest_path)
+    if os.path.basename(parent) == 'manifest':
+        return os.path.dirname(parent)
+    return parent
+
+
+def _load_source_registry(package_root, rel_path):
+    """Load and schema-validate sources.json; returns (list|None, error_message|None)."""
+    path = os.path.normpath(os.path.join(package_root, rel_path.replace('/', os.sep)))
+    if not os.path.exists(path):
+        return None, f"Sources registry not found at {path}"
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception as e:
+        return None, f"Could not read sources registry: {e}"
+    if not isinstance(data, list):
+        return None, "Sources registry must be a JSON array"
+    schema = load_schema('source')
+    if schema:
+        for i, item in enumerate(data):
+            try:
+                validate(instance=item, schema=schema)
+            except ValidationError as e:
+                return None, f"Sources item #{i}: {e.message}"
+    ids = [item.get('source_id') for item in data if isinstance(item, dict)]
+    if len(ids) != len(set(ids)):
+        return None, "Duplicate source_id in sources registry"
+    return data, None
+
+
 def check_integrity(package_dir):
     """Checks cross-reference integrity within an H3 package folder."""
     print(f"🔍 Checking integrity of package: {package_dir}")
-    
+
     entities_dir = os.path.join(package_dir, 'entities')
     if not os.path.exists(entities_dir):
-        # Fallback if the user just points to a folder with JSONs
         entities_dir = package_dir
 
     all_data = {}
@@ -106,7 +167,6 @@ def check_integrity(package_dir):
         'warranty': 'warranties.json'
     }
 
-    # 1. Load and Validate all available entities
     for entity, filename in entity_files.items():
         path = os.path.join(entities_dir, filename)
         if os.path.exists(path):
@@ -118,16 +178,46 @@ def check_integrity(package_dir):
         print("⚠️ No entity files found to check.")
         return
 
-    # 2. Cross-Reference Checks
     print("\n🔗 Running Cross-Reference Checks...")
     errors = 0
 
-    # Collect all IDs for fast lookup
+    manifest_path = _find_manifest_path(package_dir)
+    package_root = _package_root_for_manifest(manifest_path) if manifest_path else os.path.abspath(package_dir)
+    source_ids = set()
+
+    if manifest_path:
+        ok, manifest = validate_h3(manifest_path, 'manifest')
+        if not ok:
+            errors += 1
+        elif isinstance(manifest, dict):
+            rel = manifest.get('sources')
+            if not rel:
+                print("❌ Manifest is missing required 'sources' (path to sources registry).")
+                errors += 1
+            else:
+                sources_data, src_err = _load_source_registry(package_root, rel)
+                if src_err:
+                    print(f"❌ {src_err}")
+                    errors += 1
+                elif sources_data is not None:
+                    source_ids = {s['source_id'] for s in sources_data if s.get('source_id')}
+                    print(f"📎 Loaded {len(source_ids)} source(s) from manifest path '{rel}'.")
+    else:
+        fallback = os.path.join(entities_dir, 'sources.json')
+        if os.path.exists(fallback):
+            rel = os.path.relpath(fallback, package_root).replace(os.sep, '/')
+            sources_data, src_err = _load_source_registry(package_root, rel)
+            if src_err:
+                print(f"❌ {src_err}")
+                errors += 1
+            elif sources_data is not None:
+                source_ids = {s['source_id'] for s in sources_data if s.get('source_id')}
+                print(f"📎 Loaded {len(source_ids)} source(s) from {fallback} (no manifest in tree).")
+
     building_ids = {b['building_id'] for b in all_data.get('building', [])}
     space_ids = {s['space_id'] for s in all_data.get('space', [])}
     asset_ids = {a['asset_id'] for a in all_data.get('asset', [])}
 
-    # Check Assets -> Building/Space
     for asset in all_data.get('asset', []):
         if asset.get('building_id') not in building_ids:
             print(f"❌ Asset '{asset['asset_id']}' refers to missing Building '{asset['building_id']}'")
@@ -136,11 +226,39 @@ def check_integrity(package_dir):
             print(f"❌ Asset '{asset['asset_id']}' refers to missing Space '{asset['space_id']}'")
             errors += 1
 
-    # Check Warranties -> Assets
     for warranty in all_data.get('warranty', []):
         if warranty.get('asset_id') and warranty.get('asset_id') not in asset_ids:
             print(f"❌ Warranty '{warranty['warranty_id']}' refers to missing Asset '{warranty['asset_id']}'")
             errors += 1
+
+    def any_evidence():
+        for asset in all_data.get('asset', []):
+            if asset.get('evidence'):
+                return True
+        for event in all_data.get('event', []):
+            if event.get('evidence'):
+                return True
+        return False
+
+    if any_evidence():
+        print("\n🛡️ Evidence / source referential checks...")
+        if not source_ids:
+            print("❌ Entities declare evidence but no valid sources registry was loaded.")
+            errors += 1
+        else:
+            for asset in all_data.get('asset', []):
+                for ev in asset.get('evidence') or []:
+                    sid = ev.get('source_id')
+                    if sid and sid not in source_ids:
+                        print(f"❌ Asset '{asset['asset_id']}' evidence references unknown source_id '{sid}'")
+                        errors += 1
+            for event in all_data.get('event', []):
+                for ev in event.get('evidence') or []:
+                    sid = ev.get('source_id')
+                    if sid and sid not in source_ids:
+                        eid = event.get('event_id', '?')
+                        print(f"❌ Event '{eid}' evidence references unknown source_id '{sid}'")
+                        errors += 1
 
     if errors == 0:
         print("✅ All cross-references are valid!")
@@ -170,11 +288,11 @@ def show_help():
     print("Commands:")
     print("  validate <file> [type]   Validate JSON against H3 schema")
     print("  pack <dir> [output]      Pack a folder into an .h3pkg container")
-  print("  unpack <file> [dest]     Unpack an .h3pkg container")
-  print("  check <dir>              Check cross-reference integrity of a package")
-  print("  serve [port]             Start the visual dashboard viewer")
+    print("  unpack <file> [dest]     Unpack an .h3pkg container")
+    print("  check <dir>              Check cross-reference integrity of a package")
+    print("  serve [port]             Start the visual dashboard viewer")
     print("\nEntity types for validation:")
-    print("  building, asset, space, event, contracts, warranty, manifest")
+    print("  building, asset, space, event, contracts, warranty, manifest, source")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

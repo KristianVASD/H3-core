@@ -2,15 +2,20 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "H3 Manifest",
   "type": "object",
-  "required": ["schema_version", "package_id", "created_at", "entities"],
+  "required": ["schema_version", "package_id", "created_at", "entities", "sources"],
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.0"
+      "enum": ["1.0", "1.1"]
     },
 
     "package_id": {
       "type": "string"
+    },
+
+    "sources": {
+      "type": "string",
+      "description": "Path to the sources index (JSON array of Source objects), e.g. entities/sources.json"
     },
 
     "created_at": {

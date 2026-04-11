@@ -1,0 +1,23 @@
+[
+  {
+    "source_id": "src_meerwerk_001",
+    "type": "document",
+    "file_path": "files/docs/meerwerklijst.pdf",
+    "description": "Definitieve meerwerklijst keuken en badkamer",
+    "ingested_at": "2026-03-28T10:00:00Z"
+  },
+  {
+    "source_id": "src_keuring_cv_001",
+    "type": "document",
+    "file_path": "files/reports/jaarlijkse_keuring_cv.pdf",
+    "description": "Eerste jaarlijkse CV-ketel inspectie — installateur rapport",
+    "ingested_at": "2026-03-01T08:30:00Z"
+  },
+  {
+    "source_id": "src_onderhoudscontract_hvac_001",
+    "type": "document",
+    "file_path": "files/contracts/daikin_onderhoud_059901.pdf",
+    "description": "Jaarlijks onderhoudscontract Daikin VRV installatie",
+    "ingested_at": "2026-01-05T12:00:00Z"
+  }
+]

@@ -113,6 +113,14 @@ This enables:
 
 ---
 
+## The Evidence Layer (Source-Aware Data)
+
+In H3, an asset does not merely “exist” in a spreadsheet or UI: it is an **observation** that can be tied back to **where it came from**. By appending an optional `evidence` array to entities such as assets and events, H3 models a **forensic chain of trust** from raw material (PDF, drawing, photo, sensor export, or explicit user input) through to the structured record and the timeline.
+
+Each evidence item points at a `source_id` registered in the package’s **sources registry** (`sources` in the manifest → typically `entities/sources.json`). That registry stores the digital passport of each ingested file (`file_path` under `files/` in the `.h3pkg`, type, ingestion time, description). Together, **sources + evidence** make the format suitable for traceability, explainable AI (XAI), and audit-ready dossiers—without forcing a single rigid hierarchy; flat entities plus relationships plus provenance reflect how real building data actually arrives over time.
+
+---
+
 ## 🚀 Quick Start
 
 ### 1. Open the demo

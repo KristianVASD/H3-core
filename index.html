@@ -3,414 +3,3144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H3 Core • Open Building Standard</title>
-    
-    <!-- Fonts -->
+    <title>H3 Core — Property Intelligence Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Tailwind CSS (via CDN voor lokaal gebruik) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Space Grotesk', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            400: '#2dd4bf', // Teal 400
-                            500: '#14b8a6', // Teal 500
-                            900: '#134e4a', // Teal 900
-                        },
-                        dark: {
-                            bg: '#0f172a',    // Slate 900
-                            card: '#1e293b',  // Slate 800
-                            border: '#334155' // Slate 700
-                        }
-                    }
-                }
-            }
-        }
-    </script>
 
-    <style>
-        /* Custom Scrollbar voor een premium feel */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
-        body { background-color: #0f172a; color: #f8fafc; }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid #334155; }
-        
-        /* Fade in animatie */
-        .fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+<style>
+:root {
+    --bg:        #09090f;
+    --surface:   #111118;
+    --card:      #16161f;
+    --border:    #252535;
+    --border2:   #1e1e2e;
+    --text:      #e8e8f0;
+    --muted:     #6b6b88;
+    --accent:    #7c6af7;
+    --accent2:   #a855f7;
+    --gold:      #d4a84b;
+    --gold2:     #f0c87a;
+    --green:     #22c55e;
+    --amber:     #f59e0b;
+    --red:       #ef4444;
+    --cyan:      #06b6d4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+/* ─── SIDEBAR ─────────────────────────────────────────────── */
+#sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+}
+
+.sidebar-logo {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-mark {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 4px 20px rgba(124,106,247,0.3);
+    flex-shrink: 0;
+}
+
+.logo-text h1 {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.logo-text p {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* Buildings list */
+.sidebar-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    padding: 16px 20px 8px;
+}
+
+.building-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 10px;
+}
+
+.building-item {
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2px;
+    transition: background 0.15s, border-color 0.15s;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.building-item:hover { background: var(--card); }
+
+.building-item.active {
+    background: rgba(124,106,247,0.08);
+    border-color: rgba(124,106,247,0.25);
+}
+
+.building-item.active .bi-name { color: var(--text); }
+
+.bi-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.bi-info { flex: 1; min-width: 0; }
+
+.bi-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bi-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.bi-badge {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--amber);
+    color: #000;
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.add-building-btn {
+    margin: 8px 10px 0;
+    padding: 9px 12px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    width: calc(100% - 20px);
+}
+
+.add-building-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,106,247,0.05); }
+
+/* Sidebar nav */
+.sidebar-nav {
+    padding: 10px;
+    border-top: 1px solid var(--border);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+}
+
+.nav-item:hover { color: var(--text); background: var(--card); }
+.nav-item.active { color: var(--accent); background: rgba(124,106,247,0.08); border-color: rgba(124,106,247,0.2); }
+.nav-item i { width: 16px; text-align: center; font-size: 11px; }
+
+/* ─── MAIN ─────────────────────────────────────────────────── */
+#main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header */
+#topbar {
+    height: 56px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    background: rgba(9,9,15,0.8);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 5;
+}
+
+.topbar-breadcrumb {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+.topbar-breadcrumb .crumb { color: var(--text); font-weight: 500; }
+.topbar-breadcrumb .sep { color: var(--border); }
+
+.topbar-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+}
+
+.tab-btn {
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    transition: all 0.15s;
+}
+
+.tab-btn.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.topbar-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.15s;
+}
+.btn-icon:hover { color: var(--text); border-color: var(--accent); }
+
+.btn-primary {
+    padding: 0 16px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+    box-shadow: 0 2px 12px rgba(124,106,247,0.3);
+}
+.btn-primary:hover { background: #9580ff; }
+
+/* ─── CONTENT AREA ─────────────────────────────────────────── */
+#content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* ─── WELCOME / NO BUILDING SELECTED ──────────────────────── */
+#welcome-view {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.welcome-inner {
+    text-align: center;
+    max-width: 480px;
+}
+
+.welcome-glyph {
+    font-size: 64px;
+    margin-bottom: 24px;
+    filter: grayscale(0.3);
+}
+
+.welcome-inner h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--text), var(--muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.welcome-inner p {
+    font-family: 'Fraunces', serif;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+}
+
+.welcome-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    text-align: left;
+}
+
+.welcome-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.welcome-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.welcome-card-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.welcome-card h4 {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.welcome-card p {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    line-height: 1.5;
+    -webkit-text-fill-color: var(--muted);
+}
+
+/* ─── DASHBOARD ────────────────────────────────────────────── */
+.view-pad { padding: 24px 28px; }
+
+.view-header {
+    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.view-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+}
+
+.view-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.view-subtitle .tag {
+    display: inline-block;
+    background: rgba(124,106,247,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(124,106,247,0.25);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 6px;
+}
+
+/* Stats row */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,106,247,0.06) 0%, transparent 70%);
+    transform: translate(20px, -20px);
+}
+
+.stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.stat-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* Section */
+.section { margin-bottom: 28px; }
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.section-action {
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+    font-weight: 600;
+    background: none;
+    border: none;
+    font-family: 'Syne', sans-serif;
+}
+
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+/* Cards */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+}
+
+/* Event items */
+.event-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+    cursor: pointer;
+}
+
+.event-item:hover { border-color: var(--accent); }
+
+.event-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.event-item .ev-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.event-item .ev-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.badge-open { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
+.badge-closed { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+.badge-critical { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+.badge-info { background: rgba(6,182,212,0.12); color: var(--cyan); border: 1px solid rgba(6,182,212,0.2); }
+
+/* Evidence / provenance */
+.evidence-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.evidence-link {
+    font-size: 14px;
+    text-decoration: none;
+    line-height: 1;
+    opacity: 0.9;
+    cursor: help;
+}
+.evidence-link:hover { opacity: 1; }
+.evidence-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 5px;
+    border: 1px solid rgba(124,106,247,0.35);
+    background: rgba(124,106,247,0.12);
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.evidence-btn:hover {
+    background: rgba(124,106,247,0.2);
+    border-color: rgba(124,106,247,0.55);
+}
+
+/* Condition bar */
+.cond-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    overflow: hidden;
+    margin-top: 6px;
+}
+.cond-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+
+/* ─── ASSETS TABLE ─────────────────────────────────────────── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+thead tr { border-bottom: 1px solid var(--border); }
+
+thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--border2);
+    transition: background 0.1s;
+}
+
+tbody tr:hover { background: rgba(255,255,255,0.02); }
+tbody tr:last-child { border-bottom: none; }
+
+tbody td { padding: 12px 14px; }
+
+.td-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+}
+
+/* ─── AI PANEL ─────────────────────────────────────────────── */
+#ai-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ai-history {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ai-msg {
+    display: flex;
+    gap: 12px;
+    animation: fadeUp 0.3s ease;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.ai-avatar.h3 { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+.ai-avatar.user { background: var(--card); border: 1px solid var(--border); }
+
+.ai-bubble {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    border-top-left-radius: 4px;
+    padding: 14px 16px;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+}
+
+.ai-bubble.user-bubble {
+    background: rgba(124,106,247,0.08);
+    border-color: rgba(124,106,247,0.2);
+    border-top-left-radius: 14px;
+    border-top-right-radius: 4px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+}
+
+.ai-bubble .ai-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 6px;
+}
+
+.ai-typing {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.ai-typing span {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+    animation: typingBounce 1.2s infinite;
+}
+
+.ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+.ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-5px); opacity: 1; }
+}
+
+.ai-input-area {
+    padding: 16px 24px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.ai-context-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.context-chip {
+    padding: 4px 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Mono', monospace;
+}
+
+.context-chip:hover { border-color: var(--accent); color: var(--accent); }
+.context-chip.on { border-color: var(--accent); color: var(--accent); background: rgba(124,106,247,0.1); }
+
+.ai-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.ai-textarea {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    resize: none;
+    outline: none;
+    min-height: 48px;
+    max-height: 120px;
+    transition: border-color 0.15s;
+    line-height: 1.5;
+}
+
+.ai-textarea:focus { border-color: var(--accent); }
+.ai-textarea::placeholder { color: var(--muted); }
+
+.ai-send-btn {
+    width: 44px; height: 44px;
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(124,106,247,0.35);
+}
+
+.ai-send-btn:hover { background: #9580ff; transform: scale(1.05); }
+
+.ai-quick-prompts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.quick-prompt {
+    padding: 5px 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    transition: all 0.15s;
+}
+
+.quick-prompt:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ─── FILE UPLOAD AREA ─────────────────────────────────────── */
+.upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(124,106,247,0.04);
+}
+
+.upload-zone i { font-size: 32px; color: var(--muted); margin-bottom: 12px; display: block; }
+.upload-zone h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.upload-zone p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+.upload-zone input[type=file] {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer;
+    width: 100%; height: 100%;
+}
+
+.uploaded-file-list { margin-top: 16px; }
+
+.uploaded-file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+
+.uploaded-file-item i { color: var(--accent); }
+.uploaded-file-item .fname { flex: 1; font-family: 'DM Mono', monospace; font-size: 11px; }
+.uploaded-file-item .fsize { color: var(--muted); font-size: 10px; font-family: 'DM Mono', monospace; }
+.uploaded-file-item .fremove { color: var(--muted); cursor: pointer; padding: 2px; }
+.uploaded-file-item .fremove:hover { color: var(--red); }
+
+/* ─── MJOP TIMELINE ────────────────────────────────────────── */
+.mjop-timeline { position: relative; padding-left: 24px; }
+
+.mjop-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+}
+
+.mjop-item {
+    position: relative;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.mjop-item::before {
+    content: '';
+    position: absolute;
+    left: -19px;
+    top: 18px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+}
+
+.mjop-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.mjop-task { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.mjop-cost { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); }
+
+/* ─── MODAL ────────────────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 540px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 28px;
+    transform: scale(0.95);
+    transition: transform 0.2s;
+}
+
+.modal-overlay.open .modal-box { transform: scale(1); }
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.modal-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 24px;
+}
+
+.form-group { margin-bottom: 16px; }
+
+.form-group label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-family: 'DM Mono', monospace;
+}
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+.form-select option { background: var(--card); }
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-cancel:hover { border-color: var(--text); color: var(--text); }
+
+.btn-confirm {
+    flex: 2;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 2px 12px rgba(124,106,247,0.3);
+}
+
+.btn-confirm:hover { background: #9580ff; }
+
+/* ─── CONDITION GAUGE ──────────────────────────────────────── */
+.gauge-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gauge-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.gauge-fill { height: 100%; border-radius: 3px; }
+
+/* ─── TOAST ────────────────────────────────────────────────── */
+#toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 8px;
+}
+
+.toast {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    min-width: 240px;
+}
+
+.toast.show { transform: translateX(0); }
+.toast.success i { color: var(--green); }
+.toast.error i { color: var(--red); }
+.toast.info i { color: var(--cyan); }
+
+/* ─── STRATEGIC ADVISOR ────────────────────────────────────── */
+.strategy-card {
+    background: linear-gradient(135deg, rgba(124,106,247,0.08), rgba(168,85,247,0.06));
+    border: 1px solid rgba(124,106,247,0.2);
+    border-radius: 14px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.strategy-card::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,106,247,0.15), transparent 70%);
+}
+
+.strategy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.strategy-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.strategy-card p {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+/* ─── TOPDESK ITEMS ────────────────────────────────────────── */
+.topdesk-item {
+    padding: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 10px 10px 0;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.topdesk-item:hover { background: rgba(255,255,255,0.02); }
+.topdesk-item .td-id { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--amber); margin-bottom: 4px; }
+.topdesk-item .td-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.topdesk-item .td-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+
+/* ─── PORTFOLIO OVERVIEW ───────────────────────────────────── */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.portfolio-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.portfolio-card:hover {
+    border-color: rgba(124,106,247,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.portfolio-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.portfolio-card-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.portfolio-card-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.portfolio-card-addr {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.portfolio-card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.pc-stat-value { font-size: 18px; font-weight: 800; }
+.pc-stat-label { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; }
+
+/* Animations */
+@keyframes pulse-accent {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(124,106,247,0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(124,106,247,0); }
+}
+
+.live-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    display: inline-block;
+    animation: pulse-accent 2s infinite;
+    margin-right: 4px;
+}
+
+/* ─── INSPECTION GRID ──────────────────────────────────────── */
+.inspection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.inspection-thumb {
+    aspect-ratio: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.15s;
+}
+
+.inspection-thumb:hover { border-color: var(--accent); }
+
+.inspection-thumb .ith-label {
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    text-align: center;
+    padding: 0 6px;
+}
+
+.inspection-thumb .ith-badge {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+/* scrolled fade effect */
+.scroll-fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.scroll-fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* Value/cost color helpers */
+.c-green { color: var(--green); }
+.c-amber { color: var(--amber); }
+.c-red { color: var(--red); }
+.c-accent { color: var(--accent); }
+.c-gold { color: var(--gold); }
+.c-muted { color: var(--muted); }
+</style>
 </head>
-<body class="h-screen w-full flex overflow-hidden font-sans">
 
-    <!-- SIDEBAR -->
-    <aside class="w-64 glass-panel border-r border-dark-border flex flex-col justify-between z-20">
-        <div>
-            <!-- Logo Area -->
-            <div class="h-20 flex items-center px-6 border-b border-dark-border">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-blue-500 flex items-center justify-center mr-3 shadow-lg shadow-brand-500/20">
-                    <i class="fa-solid fa-cube text-white text-sm"></i>
-                </div>
-                <div>
-                    <h1 class="font-heading font-bold text-xl tracking-tight">H3 Core</h1>
-                    <p class="text-[10px] text-brand-400 font-mono tracking-widest uppercase mt-0.5">Basic Shell</p>
-                </div>
-            </div>
+<body>
 
-            <!-- Navigation -->
-            <nav class="p-4 space-y-1">
-                <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-brand-500/10 text-brand-400">
-                    <i class="fa-solid fa-chart-pie w-6"></i> Dashboard
-                </button>
-                <button onclick="switchView('assets')" id="nav-assets" class="nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:text-slate-100 hover:bg-slate-800">
-                    <i class="fa-solid fa-layer-group w-6"></i> Assets
-                </button>
-                <button onclick="switchView('events')" id="nav-events" class="nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:text-slate-100 hover:bg-slate-800">
-                    <i class="fa-solid fa-clipboard-list w-6"></i> Events
-                </button>
-                <button onclick="switchView('manifest')" id="nav-manifest" class="nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:text-slate-100 hover:bg-slate-800">
-                    <i class="fa-solid fa-code w-6"></i> Raw JSON
-                </button>
-            </nav>
+<!-- ═══════ SIDEBAR ═══════ -->
+<aside id="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-mark">
+            <i class="fa-solid fa-building-columns" style="font-size:15px;"></i>
         </div>
-
-        <!-- Upgrade Teaser Area -->
-        <div class="p-4">
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-4 relative overflow-hidden group cursor-pointer hover:border-brand-500 transition-colors" onclick="alert('In de toekomst activeert dit de verbinding met de DossierMind API voor automatische AI import en Hebbian Learning.')">
-                <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <i class="fa-solid fa-microchip text-4xl text-brand-400"></i>
-                </div>
-                <h4 class="font-heading font-semibold text-sm mb-1 text-white">Unlock Full AI</h4>
-                <p class="text-xs text-slate-400 mb-3 leading-relaxed">Upgrade to DossierMind for auto-ZIP parsing & contractor matching.</p>
-                <div class="text-xs font-semibold text-brand-400 flex items-center">
-                    Enable Smart Mode <i class="fa-solid fa-arrow-right ml-1 group-hover:translate-x-1 transition-transform"></i>
-                </div>
-            </div>
-            
-            <div class="mt-4 flex justify-between items-center px-2 text-xs text-slate-500">
-                <span>v1.0.0 Open Source</span>
-                <i class="fa-brands fa-github text-lg hover:text-white cursor-pointer" onclick="window.open('https://github.com/jouwusername/h3-core')"></i>
-            </div>
-        </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 flex flex-col relative overflow-hidden">
-        
-        <!-- Header -->
-        <header class="h-20 border-b border-dark-border flex items-center justify-between px-8 bg-dark-bg/80 backdrop-blur-md z-10 relative">
-            <div class="flex items-center gap-4">
-                <div class="bg-slate-800 border border-slate-700 rounded-full px-4 py-2 flex items-center w-64 focus-within:border-brand-400 focus-within:ring-1 focus-within:ring-brand-400 transition-all">
-                    <i class="fa-solid fa-search text-slate-400 text-sm"></i>
-                    <input type="text" placeholder="Search building data..." class="bg-transparent border-none outline-none text-sm ml-2 w-full text-slate-200 placeholder-slate-500">
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <button onclick="exportData()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm font-medium transition-colors flex items-center gap-2">
-                    <i class="fa-solid fa-download"></i> Export H3
-                </button>
-                <button onclick="openAddAssetModal()" class="px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-900 text-sm font-semibold transition-colors flex items-center gap-2 shadow-lg shadow-brand-500/20">
-                    <i class="fa-solid fa-plus"></i> Add Asset
-                </button>
-            </div>
-        </header>
-
-        <!-- Dynamic Content Area -->
-        <div id="app-content" class="flex-1 overflow-y-auto p-8 relative">
-            <!-- Content gets injected here -->
-        </div>
-
-    </main>
-
-    <!-- Modal: Add Asset (Hidden by default) -->
-    <div id="asset-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity">
-        <div class="bg-dark-card border border-dark-border rounded-2xl w-full max-w-md p-6 transform scale-95 transition-transform" id="asset-modal-content">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-heading font-bold text-xl">Add New Asset</h3>
-                <button onclick="closeAddAssetModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Asset Name / Type</label>
-                    <input type="text" id="new-asset-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-brand-400 outline-none" placeholder="e.g. Door Closer, Heat Pump">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Location (Space)</label>
-                    <input type="text" id="new-asset-space" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-brand-400 outline-none" placeholder="e.g. Living Room, Technical Room">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Condition Score (1-10)</label>
-                    <input type="number" id="new-asset-condition" min="1" max="10" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-brand-400 outline-none" value="10">
-                </div>
-                <button onclick="saveNewAsset()" class="w-full py-3 mt-2 rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-900 font-semibold transition-colors">
-                    Save to Memory
-                </button>
-            </div>
+        <div class="logo-text">
+            <h1>H3 Core</h1>
+            <p>Property Intelligence Hub</p>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        // 1. STATE & MOCK DATA
-        // Zelfs als er lokaal geen JSON is, werkt de demo hierdoor fantastisch.
-        let h3Data = {
-            building: {
-                id: "NL.BAG.0363010001234567",
-                name: "Nieuwbouw Woning - De Groene Oase",
-                address: "Amstelstraat 12",
-                city: "Amsterdam",
-                construction_year: 2025
-            },
-            assets:[
-                { id: "A-001", type: "Heat Pump", location: "Tech Room", condition: 9, status: "active", installed: "2025-01-10" },
-                { id: "A-002", type: "Door Closer", location: "Main Entrance", condition: 6, status: "maintenance_needed", installed: "2025-02-15" },
-                { id: "A-003", type: "Solar Inverter", location: "Roof", condition: 10, status: "active", installed: "2025-01-20" }
-            ],
-            events:[
-                { id: "E-001", asset_id: "A-002", type: "failure", date: "2026-03-20", desc: "Hydraulic leak on door closer", status: "open" },
-                { id: "E-002", asset_id: "A-001", type: "inspection", date: "2026-01-10", desc: "Yearly maintenance check. All nominal.", status: "closed" }
-            ]
+    <div class="sidebar-section-label">Portfolio</div>
+    <div id="building-list" class="building-list"></div>
+    <button class="add-building-btn" onclick="openAddBuildingModal()">
+        <i class="fa-solid fa-plus" style="font-size:10px;"></i> Add Building
+    </button>
+
+    <div class="sidebar-nav" style="margin-top:12px;">
+        <div class="sidebar-section-label" style="padding:0 10px 8px;">Navigation</div>
+        <div class="nav-item active" id="nav-portfolio" onclick="switchMainView('portfolio')">
+            <i class="fa-solid fa-grid-2"></i> Portfolio Overview
+        </div>
+        <div class="nav-item" id="nav-ai" onclick="switchMainView('ai')">
+            <i class="fa-solid fa-sparkles"></i> AI Advisor
+        </div>
+        <div class="nav-item" id="nav-topdesk" onclick="switchMainView('topdesk')">
+            <i class="fa-solid fa-headset"></i> Service Calls
+        </div>
+        <div class="nav-item" id="nav-reports" onclick="switchMainView('reports')">
+            <i class="fa-solid fa-chart-mixed"></i> Reports
+        </div>
+    </div>
+
+    <div style="padding:12px 10px; border-top:1px solid var(--border); margin-top:auto;">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;">
+            <span>v2.0.0 · H3 Core</span>
+            <i class="fa-brands fa-github" style="cursor:pointer;font-size:14px;" onclick="window.open('https://github.com/KristianVASD/H3-core')"></i>
+        </div>
+    </div>
+</aside>
+
+<!-- ═══════ MAIN ═══════ -->
+<div id="main">
+    <!-- Topbar -->
+    <div id="topbar">
+        <div class="topbar-breadcrumb" id="topbar-breadcrumb">
+            <span>H3 Core</span>
+            <span class="sep">/</span>
+            <span class="crumb" id="crumb-label">Portfolio</span>
+        </div>
+
+        <div id="topbar-tabs" class="topbar-tabs" style="display:none;">
+            <button class="tab-btn active" onclick="switchBuildingTab('dashboard')" id="tab-dashboard">Dashboard</button>
+            <button class="tab-btn" onclick="switchBuildingTab('assets')" id="tab-assets">Assets</button>
+            <button class="tab-btn" onclick="switchBuildingTab('mjop')" id="tab-mjop">MJOP</button>
+            <button class="tab-btn" onclick="switchBuildingTab('inspections')" id="tab-inspections">Inspections</button>
+            <button class="tab-btn" onclick="switchBuildingTab('documents')" id="tab-documents">Documents</button>
+            <button class="tab-btn" onclick="switchBuildingTab('building-ai')" id="tab-building-ai">AI Intel</button>
+        </div>
+
+        <div class="topbar-actions">
+            <button class="btn-icon" onclick="exportCurrentData()" title="Export H3 JSON"><i class="fa-solid fa-download"></i></button>
+            <button class="btn-icon" onclick="importData()" title="Import data"><i class="fa-solid fa-upload"></i></button>
+            <button class="btn-primary" onclick="contextualAdd()">
+                <i class="fa-solid fa-plus"></i> <span id="add-btn-label">Add Building</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div id="content"></div>
+</div>
+
+<!-- ═══════ MODALS ═══════ -->
+
+<!-- Add Building Modal -->
+<div class="modal-overlay" id="modal-building">
+    <div class="modal-box">
+        <div class="modal-title">Register New Building</div>
+        <div class="modal-sub">This creates a complete H3 Digital Dossier for the building</div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Building Name</label>
+                <input type="text" class="form-input" id="b-name" placeholder="De Groene Oase">
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select class="form-select" id="b-type">
+                    <option value="🏢">🏢 Kantoor / Office</option>
+                    <option value="🏠">🏠 Woning / Residential</option>
+                    <option value="🏭">🏭 Industrie / Industrial</option>
+                    <option value="🏫">🏫 Zorg / Care</option>
+                    <option value="🏗️">🏗️ In Aanbouw / Under Construction</option>
+                    <option value="🏬">🏬 Retail / Commercial</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Street Address</label>
+            <input type="text" class="form-input" id="b-address" placeholder="Amstelstraat 12">
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" class="form-input" id="b-city" placeholder="Amsterdam">
+            </div>
+            <div class="form-group">
+                <label>Postal Code</label>
+                <input type="text" class="form-input" id="b-postal" placeholder="1011 PN">
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Construction Year</label>
+                <input type="number" class="form-input" id="b-year" placeholder="2005" min="1800" max="2030">
+            </div>
+            <div class="form-group">
+                <label>BAG ID / BIM Reference</label>
+                <input type="text" class="form-input" id="b-bag" placeholder="NL.BAG.036301...">
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>GFA (m²)</label>
+                <input type="number" class="form-input" id="b-gfa" placeholder="3500">
+            </div>
+            <div class="form-group">
+                <label>WOZ / Market Value (€)</label>
+                <input type="number" class="form-input" id="b-value" placeholder="1250000">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Description / Notes</label>
+            <textarea class="form-textarea" id="b-desc" placeholder="Brief description of the property..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal('modal-building')">Cancel</button>
+            <button class="btn-confirm" onclick="saveBuilding()">
+                <i class="fa-solid fa-building-columns"></i> Register Building
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Asset Modal -->
+<div class="modal-overlay" id="modal-asset">
+    <div class="modal-box">
+        <div class="modal-title">Add Asset</div>
+        <div class="modal-sub">Register a physical component or installation</div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Asset Type</label>
+                <input type="text" class="form-input" id="a-type" placeholder="Heat Pump, Lift, CV-ketel...">
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select class="form-select" id="a-cat">
+                    <option>Mechanical (HVAC)</option>
+                    <option>Electrical</option>
+                    <option>Structural</option>
+                    <option>Facade</option>
+                    <option>Roof</option>
+                    <option>Fire Safety</option>
+                    <option>Plumbing</option>
+                    <option>Elevator / Transport</option>
+                    <option>Security</option>
+                    <option>Other</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Location / Space</label>
+                <input type="text" class="form-input" id="a-location" placeholder="Tech Room, Roof, Floor 3...">
+            </div>
+            <div class="form-group">
+                <label>Brand / Model</label>
+                <input type="text" class="form-input" id="a-brand" placeholder="Daikin VRV-IV">
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Install Date</label>
+                <input type="date" class="form-input" id="a-installed">
+            </div>
+            <div class="form-group">
+                <label>Lifespan (years)</label>
+                <input type="number" class="form-input" id="a-lifespan" placeholder="15" min="1" max="100">
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Condition (1–10)</label>
+                <input type="number" class="form-input" id="a-condition" placeholder="8" min="1" max="10">
+            </div>
+            <div class="form-group">
+                <label>Replacement Value (€)</label>
+                <input type="number" class="form-input" id="a-value" placeholder="24000">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Notes</label>
+            <textarea class="form-textarea" id="a-notes" placeholder="Additional observations, warranty info, serial numbers..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal('modal-asset')">Cancel</button>
+            <button class="btn-confirm" onclick="saveAsset()">Save Asset</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal-overlay" id="modal-event">
+    <div class="modal-box">
+        <div class="modal-title">Log Event</div>
+        <div class="modal-sub">Record maintenance, inspection, failure, or service activity</div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Event Type</label>
+                <select class="form-select" id="e-type">
+                    <option value="inspection">🔍 Inspection</option>
+                    <option value="failure">⚠️ Failure / Defect</option>
+                    <option value="maintenance">🔧 Maintenance</option>
+                    <option value="replacement">🔄 Replacement</option>
+                    <option value="upgrade">⬆️ Upgrade</option>
+                    <option value="certification">📋 Certification</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Asset</label>
+                <select class="form-select" id="e-asset"></select>
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" class="form-input" id="e-date">
+            </div>
+            <div class="form-group">
+                <label>Cost (€)</label>
+                <input type="number" class="form-input" id="e-cost" placeholder="0">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-textarea" id="e-desc" placeholder="What happened? What was done?"></textarea>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Status</label>
+                <select class="form-select" id="e-status">
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Contractor</label>
+                <input type="text" class="form-input" id="e-contractor" placeholder="Firma naam...">
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal('modal-event')">Cancel</button>
+            <button class="btn-confirm" onclick="saveEvent()">Log Event</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add MJOP Item Modal -->
+<div class="modal-overlay" id="modal-mjop">
+    <div class="modal-box">
+        <div class="modal-title">Add MJOP Item</div>
+        <div class="modal-sub">Multi-Year Maintenance Plan — long-term planning item</div>
+
+        <div class="form-group">
+            <label>Task / Intervention</label>
+            <input type="text" class="form-input" id="m-task" placeholder="Vervanging dakbedekking, Renovatie lift...">
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Planned Year</label>
+                <input type="number" class="form-input" id="m-year" placeholder="2027" min="2024" max="2045">
+            </div>
+            <div class="form-group">
+                <label>Estimated Cost (€)</label>
+                <input type="number" class="form-input" id="m-cost" placeholder="45000">
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label>Priority</label>
+                <select class="form-select" id="m-priority">
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Asset / Component</label>
+                <select class="form-select" id="m-asset"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Notes / Trigger</label>
+            <textarea class="form-textarea" id="m-notes" placeholder="Waarom is dit nodig? Wat is de aanleiding?"></textarea>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal('modal-mjop')">Cancel</button>
+            <button class="btn-confirm" onclick="saveMjopItem()">Add to MJOP</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container"></div>
+
+<!-- ═══════ JAVASCRIPT ═══════ -->
+<script>
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let state = {
+    buildings: [],
+    sourcesById: {},
+    selectedBuildingId: null,
+    mainView: 'portfolio',       // portfolio | ai | topdesk | reports
+    buildingTab: 'dashboard',    // dashboard | assets | mjop | inspections | documents | building-ai
+    aiContexts: ['assets', 'mjop', 'events'],
+    aiHistory: [],
+    topdeskCalls: []
+};
+
+// Load from JSON files in entities/
+async function loadState() {
+    try {
+        // Fetch buildings
+        const bRes = await fetch('entities/buildings.json');
+        const buildings = await bRes.json();
+        
+        // Fetch assets
+        const aRes = await fetch('entities/assets.json');
+        const assets = await aRes.json();
+        
+        // Fetch events
+        const eRes = await fetch('entities/events.json');
+        const events = await eRes.json();
+
+        let sourcesList = [];
+        try {
+            const sRes = await fetch('entities/sources.json');
+            if (sRes.ok) sourcesList = await sRes.json();
+        } catch (_) {}
+        state.sourcesById = {};
+        if (Array.isArray(sourcesList)) {
+            sourcesList.forEach(s => {
+                if (s && s.source_id) state.sourcesById[s.source_id] = s;
+            });
+        }
+
+        // Join data into state.buildings
+        state.buildings = buildings.map(b => {
+            const buildingAssets = assets.filter(a => a.building_id === b.building_id).map(a => ({
+                id: a.asset_id,
+                type: a.type,
+                cat: a.category || a.type,
+                location: typeof a.location === 'string'
+                    ? a.location
+                    : (a.location && (a.location.zone || a.location.floor)) || 'Unknown',
+                brand: a.specifications?.brand || '–',
+                installed: a.lifecycle?.installed_at || '–',
+                lifespan: a.lifecycle?.expected_lifespan_years || 20,
+                condition: a.condition_score || 8,
+                value: a.value || 0,
+                notes: a.notes || '',
+                status: a.status,
+                evidence: Array.isArray(a.evidence) ? a.evidence : []
+            }));
+
+            const buildingEvents = events.filter(e => e.building_id === b.building_id && !e.metadata?.is_mjop && e.metadata?.source !== 'TopDesk').map(e => ({
+                id: e.event_id,
+                type: e.event_type,
+                assetId: e.asset_id,
+                date: e.reported_at?.split('T')[0] || '–',
+                cost: e.metadata?.cost || 0,
+                desc: e.description,
+                status: e.status,
+                contractor: e.resolution?.resolved_by || '',
+                evidence: Array.isArray(e.evidence) ? e.evidence : []
+            }));
+
+            const buildingMjop = events.filter(e => e.building_id === b.building_id && e.metadata?.is_mjop).map(e => ({
+                id: e.event_id,
+                task: e.description,
+                year: e.metadata?.planned_year || new Date().getFullYear(),
+                cost: e.metadata?.estimated_cost || 0,
+                priority: e.severity || 'medium',
+                assetId: e.asset_id,
+                notes: e.metadata?.notes || ''
+            }));
+
+            // For now, keep documents and inspections empty or mock them as they weren't in the root JSONs
+            const buildingDocs = [];
+            const buildingInspections = [];
+
+            return {
+                id: b.building_id,
+                name: b.name,
+                type: b.type || '🏢',
+                address: b.address,
+                city: b.city,
+                postal: b.postal || '–',
+                year: b.construction_year,
+                bag: b.building_id,
+                gfa: b.gfa || 0,
+                value: b.value || 0,
+                desc: b.description || '',
+                assets: buildingAssets,
+                events: buildingEvents,
+                mjop: buildingMjop,
+                documents: buildingDocs,
+                inspections: buildingInspections
+            };
+        });
+
+        // Topdesk calls from events with source TopDesk
+        state.topdeskCalls = events.filter(e => e.metadata?.source === 'TopDesk').map(e => ({
+            id: e.event_id,
+            buildingRef: buildings.find(b => b.building_id === e.building_id)?.name || 'Unknown',
+            title: e.description.split('.')[0],
+            status: e.status,
+            priority: e.severity,
+            date: e.reported_at?.split('T')[0],
+            desc: e.description,
+            assignee: e.metadata?.assignee || 'Onbekend'
+        }));
+
+        renderSidebar();
+        renderContent();
+    } catch(e) {
+        console.error("Error loading H3 data:", e);
+        toast("Fout bij laden van data uit JSON bestanden", "error");
+    }
+}
+
+function saveState() {
+    // In this mode, we don't save back to JSON files (requires server-side)
+    // We could save to localStorage for temporary changes if needed
+    try {
+        localStorage.setItem('h3core_v2_local', JSON.stringify({
+            buildings: state.buildings,
+            topdeskCalls: state.topdeskCalls
+        }));
+    } catch(e) {}
+}
+
+// ─────────────────────────────────────────────
+// SEED DATA (DISABLED - USING JSON FILES)
+// ─────────────────────────────────────────────
+function seedSampleData() {}
+function generateSampleTopdesk() { return []; }
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function h3id() {
+    return 'H3-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+}
+
+function fmtEur(val) {
+    if (!val) return '–';
+    return '€ ' + Number(val).toLocaleString('nl-NL');
+}
+
+function condColor(n) {
+    if (n >= 8) return 'var(--green)';
+    if (n >= 5) return 'var(--amber)';
+    return 'var(--red)';
+}
+
+function jsStringLiteral(s) {
+    return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+function escapeAttr(s) {
+    return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function firstEvidenceFileHref(evidence) {
+    if (!evidence || !evidence.length) return '#';
+    const src = state.sourcesById[evidence[0].source_id];
+    const fp = src && src.file_path ? src.file_path : '';
+    return fp || '#';
+}
+
+function evidenceHoverText(evidence) {
+    if (!evidence || !evidence.length) return '';
+    return evidence.map(ev => {
+        const src = state.sourcesById[ev.source_id];
+        const fp = src && src.file_path ? src.file_path : '';
+        const parts = [
+            ev.note || '(geen notitie)',
+            ev.confidence != null ? `zekerheid: ${ev.confidence}` : '',
+            ev.extracted_by ? `extractor: ${ev.extracted_by}` : '',
+            fp ? `bestand: ${fp}` : ''
+        ].filter(Boolean);
+        return parts.join(' · ');
+    }).join('\n---\n');
+}
+
+function showEvidenceDetails(kind, buildingId, recordId) {
+    const b = state.buildings.find(x => x.id === buildingId);
+    if (!b) return;
+    let evidence = [];
+    if (kind === 'asset') {
+        const a = b.assets.find(x => x.id === recordId);
+        evidence = a && a.evidence ? a.evidence : [];
+    } else if (kind === 'event') {
+        const ev = b.events.find(x => x.id === recordId);
+        evidence = ev && ev.evidence ? ev.evidence : [];
+    }
+    if (!evidence.length) return;
+    const body = evidence.map((ev, i) => {
+        const src = state.sourcesById[ev.source_id];
+        const fp = src && src.file_path ? src.file_path : '';
+        const desc = src && src.description ? src.description : '';
+        return `${i + 1}. ${ev.note || '—'}
+   Bron-id: ${ev.source_id}${desc ? '\n   ' + desc : ''}${fp ? '\n   Bestand: ' + fp : ''}${ev.confidence != null ? '\n   Zekerheid: ' + ev.confidence : ''}${ev.extracted_by ? '\n   Extractor: ' + ev.extracted_by : ''}`;
+    }).join('\n\n');
+    alert(body);
+}
+
+function renderEvidenceControls(kind, buildingId, recordId, evidence) {
+    if (!evidence || !evidence.length) return '';
+    const href = firstEvidenceFileHref(evidence);
+    const title = escapeAttr(evidenceHoverText(evidence));
+    const bid = jsStringLiteral(buildingId);
+    const rid = jsStringLiteral(recordId);
+    return `<span class="evidence-cell">
+        <a class="evidence-link" href="${href === '#' ? '#' : href}" target="_blank" rel="noopener" title="${title}" aria-label="Open brondocument">🛡️</a>
+        <button type="button" class="evidence-btn" title="${title}" onclick="showEvidenceDetails('${kind}','${bid}','${rid}')">Bron</button>
+    </span>`;
+}
+
+function getBuilding(id) {
+    return state.buildings.find(b => b.id === id);
+}
+
+function getSelectedBuilding() {
+    return state.selectedBuildingId ? getBuilding(state.selectedBuildingId) : null;
+}
+
+// ─────────────────────────────────────────────
+// SIDEBAR RENDERING
+// ─────────────────────────────────────────────
+function renderSidebar() {
+    const list = document.getElementById('building-list');
+    list.innerHTML = '';
+
+    state.buildings.forEach(b => {
+        const openEvents = b.events.filter(e => e.status === 'open').length;
+        const isActive = b.id === state.selectedBuildingId;
+        const div = document.createElement('div');
+        div.className = 'building-item' + (isActive ? ' active' : '');
+        div.innerHTML = `
+            <div class="bi-icon" style="background:${isActive ? 'rgba(124,106,247,0.15)' : 'var(--card)'};">${b.type}</div>
+            <div class="bi-info">
+                <div class="bi-name">${b.name}</div>
+                <div class="bi-meta">${b.city} · ${b.year}</div>
+            </div>
+            ${openEvents > 0 ? `<div class="bi-badge">${openEvents}</div>` : ''}
+        `;
+        div.onclick = () => selectBuilding(b.id);
+        list.appendChild(div);
+    });
+}
+
+// ─────────────────────────────────────────────
+// VIEW SWITCHING
+// ─────────────────────────────────────────────
+function selectBuilding(id) {
+    state.selectedBuildingId = id;
+    state.buildingTab = 'dashboard';
+    // switch to building context
+    updateTopbarForBuilding(true);
+    renderSidebar();
+    renderContent();
+}
+
+function switchMainView(view) {
+    state.selectedBuildingId = null;
+    state.mainView = view;
+    updateTopbarForBuilding(false);
+
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const el = document.getElementById('nav-' + view);
+    if (el) el.classList.add('active');
+
+    // Update breadcrumb
+    const labels = { portfolio: 'Portfolio', ai: 'AI Advisor', topdesk: 'Service Calls', reports: 'Reports' };
+    document.getElementById('crumb-label').textContent = labels[view] || view;
+    document.getElementById('add-btn-label').textContent = 'Add Building';
+
+    renderSidebar();
+    renderContent();
+}
+
+function updateTopbarForBuilding(isBuildingView) {
+    const tabs = document.getElementById('topbar-tabs');
+    tabs.style.display = isBuildingView ? 'flex' : 'none';
+}
+
+function switchBuildingTab(tab) {
+    state.buildingTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+
+    // Update add button label
+    const addLabels = {
+        'dashboard': 'Log Event',
+        'assets': 'Add Asset',
+        'mjop': 'Add MJOP Item',
+        'inspections': 'Add Inspection',
+        'documents': 'Upload Doc',
+        'building-ai': 'Ask AI'
+    };
+    document.getElementById('add-btn-label').textContent = addLabels[tab] || 'Add';
+
+    renderContent();
+}
+
+function contextualAdd() {
+    if (state.selectedBuildingId) {
+        const actions = {
+            'dashboard': () => openEventModal(),
+            'assets': () => openModal('modal-asset'),
+            'mjop': () => openMjopModal(),
+            'inspections': () => toast('Upload inspection ZIP via the Inspections tab', 'info'),
+            'documents': () => toast('Drag documents into the upload zone', 'info'),
+            'building-ai': () => document.getElementById('ai-input') && document.getElementById('ai-input').focus()
         };
+        (actions[state.buildingTab] || (() => {}))();
+    } else {
+        openAddBuildingModal();
+    }
+}
 
-        let currentView = 'dashboard';
+// ─────────────────────────────────────────────
+// MAIN RENDER ROUTER
+// ─────────────────────────────────────────────
+function renderContent() {
+    const content = document.getElementById('content');
+    content.innerHTML = '';
 
-        // Probeer lokale data te fetchen (overschrijft mock data indien succesvol)
-        async function loadLocalFiles() {
-            try {
-                // Hier zou normaal de logica zitten om manifest.json etc op te halen
-                // const res = await fetch('manifest/minimal_manifest.json');
-                // if(res.ok) { h3Data = await res.json(); }
-                console.log("H3 Data Loaded. Ready to render.");
-            } catch (e) {
-                console.log("Using embedded fallback data.");
-            }
-            renderView();
-        }
+    if (state.selectedBuildingId) {
+        renderBuildingView();
+    } else {
+        const views = {
+            portfolio: renderPortfolioView,
+            ai: renderGlobalAI,
+            topdesk: renderTopdeskView,
+            reports: renderReportsView
+        };
+        (views[state.mainView] || renderPortfolioView)();
+    }
+}
 
-        // 2. VIEW SWITCHING LOGIC
-        function switchView(view) {
-            currentView = view;
-            
-            // Update sidebar active states
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:text-slate-100 hover:bg-slate-800";
-            });
-            const activeBtn = document.getElementById(`nav-${view}`);
-            activeBtn.className = "nav-btn w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-brand-500/10 text-brand-400";
+// ─────────────────────────────────────────────
+// PORTFOLIO VIEW
+// ─────────────────────────────────────────────
+function renderPortfolioView() {
+    const content = document.getElementById('content');
+    document.getElementById('crumb-label').textContent = 'Portfolio Overview';
+    document.getElementById('add-btn-label').textContent = 'Add Building';
 
-            renderView();
-        }
+    const totalValue = state.buildings.reduce((s, b) => s + (b.value || 0), 0);
+    const totalAssets = state.buildings.reduce((s, b) => s + b.assets.length, 0);
+    const openEvents = state.buildings.reduce((s, b) => s + b.events.filter(e => e.status === 'open').length, 0);
+    const totalMjopCost = state.buildings.reduce((s, b) => s + b.mjop.reduce((ss, m) => ss + (m.cost || 0), 0), 0);
+    const avgCondition = state.buildings.length ? (
+        state.buildings.reduce((s, b) => {
+            const bc = b.assets.length ? b.assets.reduce((ss, a) => ss + a.condition, 0) / b.assets.length : 0;
+            return s + bc;
+        }, 0) / state.buildings.length
+    ).toFixed(1) : '–';
 
-        // 3. RENDERING ENGINE
-        function renderView() {
-            const container = document.getElementById('app-content');
-            container.innerHTML = ''; // Clear
+    content.innerHTML = `
+    <div class="view-pad" style="max-width:1100px;margin:0 auto;">
+        <div class="view-header">
+            <div>
+                <div class="view-title">Portfolio Dashboard</div>
+                <div class="view-subtitle">
+                    <span class="tag">H3 Core</span>
+                    ${state.buildings.length} gebouwen · <span style="color:var(--live-dot)"><span class="live-dot"></span>Live</span>
+                </div>
+            </div>
+        </div>
 
-            if (currentView === 'dashboard') {
-                container.innerHTML = `
-                    <div class="fade-in max-w-5xl mx-auto">
-                        <div class="mb-8">
-                            <h2 class="font-heading text-3xl font-bold mb-1">${h3Data.building.name}</h2>
-                            <p class="text-slate-400"><i class="fa-solid fa-location-dot mr-2"></i>${h3Data.building.address}, ${h3Data.building.city} • Built ${h3Data.building.construction_year}</p>
-                        </div>
+        <div class="stats-row" style="grid-template-columns:repeat(5,1fr);">
+            <div class="stat-card">
+                <div class="stat-label">Gebouwen <i class="fa-solid fa-building"></i></div>
+                <div class="stat-value">${state.buildings.length}</div>
+                <div class="stat-sub">in portfolio</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Portfolio Waarde <i class="fa-solid fa-euro-sign" style="color:var(--gold)"></i></div>
+                <div class="stat-value" style="font-size:22px;color:var(--gold);">${fmtEur(totalValue)}</div>
+                <div class="stat-sub">WOZ / marktwaarde</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Gemiddelde Conditie <i class="fa-solid fa-heart-pulse" style="color:var(--green)"></i></div>
+                <div class="stat-value" style="color:var(--green);">${avgCondition}<span style="font-size:16px;color:var(--muted)">/10</span></div>
+                <div class="stat-sub">over alle assets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Open Meldingen <i class="fa-solid fa-triangle-exclamation" style="color:var(--amber)"></i></div>
+                <div class="stat-value" style="color:${openEvents > 0 ? 'var(--amber)' : 'var(--green)'};">${openEvents}</div>
+                <div class="stat-sub">actieve incidenten</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">MJOP Reserve <i class="fa-solid fa-calendar-days" style="color:var(--cyan)"></i></div>
+                <div class="stat-value" style="font-size:22px;color:var(--cyan);">${fmtEur(totalMjopCost)}</div>
+                <div class="stat-sub">geplande investering</div>
+            </div>
+        </div>
 
-                        <!-- Stats Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            <div class="glass-panel rounded-2xl p-6">
-                                <div class="text-slate-400 text-sm font-medium mb-4 flex justify-between">Total Assets <i class="fa-solid fa-layer-group text-slate-500"></i></div>
-                                <div class="text-4xl font-heading font-bold text-white">${h3Data.assets.length}</div>
-                            </div>
-                            <div class="glass-panel rounded-2xl p-6">
-                                <div class="text-slate-400 text-sm font-medium mb-4 flex justify-between">Open Events <i class="fa-solid fa-triangle-exclamation text-amber-500"></i></div>
-                                <div class="text-4xl font-heading font-bold text-white">${h3Data.events.filter(e => e.status === 'open').length}</div>
-                            </div>
-                            <div class="glass-panel rounded-2xl p-6">
-                                <div class="text-slate-400 text-sm font-medium mb-4 flex justify-between">Avg Condition <i class="fa-solid fa-heart-pulse text-brand-400"></i></div>
-                                <div class="text-4xl font-heading font-bold text-brand-400">
-                                    ${(h3Data.assets.reduce((sum, a) => sum + parseInt(a.condition), 0) / h3Data.assets.length).toFixed(1)} <span class="text-lg text-slate-500">/ 10</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Mini recent events -->
-                        <h3 class="font-heading text-lg font-semibold mb-4 mt-10">Recent Events</h3>
-                        <div class="space-y-3">
-                            ${h3Data.events.map(e => `
-                                <div class="glass-panel rounded-xl p-4 flex items-center justify-between border-l-4 ${e.status === 'open' ? 'border-amber-500' : 'border-slate-600'}">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center">
-                                            <i class="fa-solid ${e.type === 'failure' ? 'fa-wrench text-amber-500' : 'fa-check text-brand-400'}"></i>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-white">${e.desc}</div>
-                                            <div class="text-xs text-slate-400">Asset: ${e.asset_id} • ${e.date}</div>
-                                        </div>
-                                    </div>
-                                    <span class="px-3 py-1 rounded-full text-xs font-medium ${e.status === 'open' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-700 text-slate-300'} uppercase tracking-wider">${e.status}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (currentView === 'assets') {
-                container.innerHTML = `
-                    <div class="fade-in max-w-5xl mx-auto">
-                        <div class="flex justify-between items-end mb-6">
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Gebouwen</div>
+            </div>
+            <div class="portfolio-grid">
+                ${state.buildings.map(b => {
+                    const bc = b.assets.length ? (b.assets.reduce((s, a) => s + a.condition, 0) / b.assets.length).toFixed(1) : '–';
+                    const openEv = b.events.filter(e => e.status === 'open').length;
+                    return `
+                    <div class="portfolio-card" onclick="selectBuilding('${b.id}')">
+                        <div class="portfolio-card-top">
+                            <div class="portfolio-card-icon" style="background:var(--card);border:1px solid var(--border);">${b.type}</div>
                             <div>
-                                <h2 class="font-heading text-3xl font-bold mb-1">Asset Inventory</h2>
-                                <p class="text-slate-400">All physical components structured in H3.</p>
+                                <div class="portfolio-card-name">${b.name}</div>
+                                <div class="portfolio-card-addr">${b.address}, ${b.city}</div>
+                                <div style="margin-top:6px;">
+                                    ${openEv > 0 ? `<span class="badge badge-open"><i class="fa-solid fa-circle-exclamation"></i>${openEv} open</span>` : '<span class="badge badge-closed"><i class="fa-solid fa-check"></i>All clear</span>'}
+                                </div>
                             </div>
                         </div>
+                        <div class="portfolio-card-stats">
+                            <div>
+                                <div class="pc-stat-value">${b.assets.length}</div>
+                                <div class="pc-stat-label">Assets</div>
+                            </div>
+                            <div>
+                                <div class="pc-stat-value" style="color:${condColor(parseFloat(bc))};">${bc}</div>
+                                <div class="pc-stat-label">Conditie</div>
+                            </div>
+                            <div>
+                                <div class="pc-stat-value" style="font-size:14px;color:var(--gold);">${b.value ? '€'+Math.round(b.value/1000)+'K' : '–'}</div>
+                                <div class="pc-stat-label">Waarde</div>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('')}
+                <div class="portfolio-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--muted);cursor:pointer;" onclick="openAddBuildingModal()">
+                    <i class="fa-solid fa-plus" style="font-size:24px;"></i>
+                    <div style="font-size:13px;font-weight:600;">Gebouw toevoegen</div>
+                </div>
+            </div>
+        </div>
 
-                        <div class="glass-panel rounded-2xl overflow-hidden">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="bg-slate-800/50 border-b border-dark-border text-xs uppercase tracking-wider text-slate-400">
-                                        <th class="p-4 font-medium">ID</th>
-                                        <th class="p-4 font-medium">Type</th>
-                                        <th class="p-4 font-medium">Location</th>
-                                        <th class="p-4 font-medium">Condition</th>
-                                        <th class="p-4 font-medium">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-sm divide-y divide-dark-border">
-                                    ${h3Data.assets.map(a => `
-                                        <tr class="hover:bg-slate-800/30 transition-colors">
-                                            <td class="p-4 font-mono text-brand-400 text-xs">${a.id}</td>
-                                            <td class="p-4 font-medium text-white">${a.type}</td>
-                                            <td class="p-4 text-slate-300">${a.location}</td>
-                                            <td class="p-4">
-                                                <div class="flex items-center gap-2">
-                                                    <div class="w-16 h-2 bg-slate-800 rounded-full overflow-hidden">
-                                                        <div class="h-full ${a.condition >= 8 ? 'bg-brand-500' : a.condition >= 5 ? 'bg-amber-500' : 'bg-rose-500'}" style="width: ${a.condition * 10}%"></div>
-                                                    </div>
-                                                    <span class="text-xs text-slate-400">${a.condition}/10</span>
-                                                </div>
-                                            </td>
-                                            <td class="p-4">
-                                                <span class="px-2.5 py-1 rounded-full text-xs font-medium ${a.status === 'active' ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}">${a.status.replace('_', ' ')}</span>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Recente activiteit</div>
+            </div>
+            ${state.buildings.flatMap(b => b.events.map(e => ({...e, buildingName: b.name, buildingId: b.id}))).sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0,5).map(e => `
+                <div class="event-item">
+                    <div class="event-dot" style="background:${e.status==='open'?'var(--amber)':e.status==='in_progress'?'var(--cyan)':'var(--green)'}"></div>
+                    <div style="flex:1">
+                        <div class="ev-title">${e.desc}</div>
+                        <div class="ev-meta">${e.buildingName} · ${e.date} · ${e.type}</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        ${e.evidence && e.evidence.length ? renderEvidenceControls('event', e.buildingId, e.id, e.evidence) : ''}
+                        <span class="badge ${e.status==='open'?'badge-open':e.status==='in_progress'?'badge-info':'badge-closed'}">${e.status.replace('_',' ')}</span>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────
+// BUILDING VIEW ROUTER
+// ─────────────────────────────────────────────
+function renderBuildingView() {
+    const b = getSelectedBuilding();
+    if (!b) return;
+
+    // update breadcrumb
+    document.getElementById('crumb-label').textContent = b.name;
+
+    const tabs = {
+        'dashboard': renderBuildingDashboard,
+        'assets': renderBuildingAssets,
+        'mjop': renderBuildingMJOP,
+        'inspections': renderBuildingInspections,
+        'documents': renderBuildingDocuments,
+        'building-ai': renderBuildingAI
+    };
+    (tabs[state.buildingTab] || renderBuildingDashboard)(b);
+}
+
+// ─────────────────────────────────────────────
+// BUILDING DASHBOARD
+// ─────────────────────────────────────────────
+function renderBuildingDashboard(b) {
+    const content = document.getElementById('content');
+    const avgCond = b.assets.length ? (b.assets.reduce((s, a) => s + a.condition, 0) / b.assets.length).toFixed(1) : '–';
+    const openEv = b.events.filter(e => e.status === 'open').length;
+    const mjopTotal = b.mjop.reduce((s, m) => s + (m.cost || 0), 0);
+    const assetValue = b.assets.reduce((s, a) => s + (a.value || 0), 0);
+    const criticalAssets = b.assets.filter(a => a.condition < 5).length;
+
+    content.innerHTML = `
+    <div class="view-pad" style="max-width:1100px;margin:0 auto;">
+        <div class="view-header">
+            <div>
+                <div class="view-title">${b.type} ${b.name}</div>
+                <div class="view-subtitle">
+                    <span class="tag">H3 Dossier</span>
+                    ${b.address}, ${b.city} · ${b.year} · ${b.gfa ? b.gfa + ' m²' : ''}
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);">BAG/BIM</div>
+                <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);">${b.bag || '–'}</div>
+            </div>
+        </div>
+
+        <div class="stats-row" style="grid-template-columns:repeat(5,1fr);">
+            <div class="stat-card">
+                <div class="stat-label">Assets</div>
+                <div class="stat-value">${b.assets.length}</div>
+                <div class="stat-sub">${criticalAssets > 0 ? `<span class="c-red">${criticalAssets} kritiek</span>` : '<span class="c-green">Alles ok</span>'}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Gem. Conditie</div>
+                <div class="stat-value" style="color:${condColor(parseFloat(avgCond))};">${avgCond}<span style="font-size:14px;color:var(--muted)">/10</span></div>
+                <div class="stat-sub">NEN 2767 proxy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Open Events</div>
+                <div class="stat-value" style="color:${openEv>0?'var(--amber)':'var(--green)'};">${openEv}</div>
+                <div class="stat-sub">${b.events.length} totaal gelogd</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">MJOP Budget</div>
+                <div class="stat-value" style="font-size:20px;color:var(--cyan);">${fmtEur(mjopTotal)}</div>
+                <div class="stat-sub">${b.mjop.length} items</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Asset Vervangingswaarde</div>
+                <div class="stat-value" style="font-size:20px;color:var(--gold);">${fmtEur(assetValue)}</div>
+                <div class="stat-sub">totale boekwaarde</div>
+            </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:24px;">
+            <!-- Recent events -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Events &amp; Meldingen</div>
+                    <button class="section-action" onclick="switchBuildingTab('assets')">Alle assets →</button>
+                </div>
+                ${b.events.length === 0 ? '<div style="color:var(--muted);font-size:13px;padding:20px 0;">Nog geen events gelogd.</div>' :
+                b.events.sort((a,bb) => new Date(bb.date)-new Date(a.date)).slice(0,4).map(e => `
+                    <div class="event-item">
+                        <div class="event-dot" style="background:${e.status==='open'?'var(--amber)':e.status==='in_progress'?'var(--cyan)':'var(--green)'}"></div>
+                        <div style="flex:1">
+                            <div class="ev-title">${e.desc.length > 60 ? e.desc.substr(0,60)+'…' : e.desc}</div>
+                            <div class="ev-meta">${e.date} · ${e.type} ${e.contractor ? '· '+e.contractor : ''}</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            ${e.evidence && e.evidence.length ? renderEvidenceControls('event', b.id, e.id, e.evidence) : ''}
+                            <span class="badge ${e.status==='open'?'badge-open':e.status==='in_progress'?'badge-info':'badge-closed'}">${e.status.replace('_',' ')}</span>
                         </div>
                     </div>
-                `;
-            } else if (currentView === 'manifest') {
-                container.innerHTML = `
-                    <div class="fade-in max-w-5xl mx-auto h-full flex flex-col">
-                        <div class="mb-4 flex justify-between items-center">
-                            <h2 class="font-heading text-2xl font-bold">H3 Raw Memory</h2>
-                            <span class="text-xs text-brand-400 font-mono bg-brand-500/10 px-3 py-1 rounded-full">Schema v1.0</span>
+                `).join('')}
+                <button class="btn-primary" style="margin-top:10px;width:auto;" onclick="openEventModal()">
+                    <i class="fa-solid fa-plus"></i> Log Event
+                </button>
+            </div>
+
+            <!-- MJOP summary -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">MJOP Highlights</div>
+                    <button class="section-action" onclick="switchBuildingTab('mjop')">Volledig plan →</button>
+                </div>
+                <div class="mjop-timeline">
+                    ${b.mjop.sort((a,bb)=>a.year-bb.year).slice(0,4).map(m => `
+                        <div class="mjop-item">
+                            <div class="mjop-year">${m.year} · <span style="color:${m.priority==='high'?'var(--red)':m.priority==='medium'?'var(--amber)':'var(--green)'};">${m.priority.toUpperCase()}</span></div>
+                            <div class="mjop-task">${m.task}</div>
+                            <div class="mjop-cost">${fmtEur(m.cost)}</div>
                         </div>
-                        <div class="flex-1 glass-panel rounded-2xl p-6 overflow-auto">
-                            <pre class="font-mono text-sm text-slate-300"><code>${JSON.stringify(h3Data, null, 4)}</code></pre>
-                        </div>
+                    `).join('')}
+                    ${b.mjop.length === 0 ? '<div style="color:var(--muted);font-size:13px;">Nog geen MJOP items.</div>' : ''}
+                </div>
+            </div>
+        </div>
+
+        <!-- Critical assets -->
+        ${criticalAssets > 0 ? `
+        <div class="section">
+            <div class="section-header"><div class="section-title">⚠ Kritieke Assets</div></div>
+            ${b.assets.filter(a => a.condition < 5).map(a => `
+                <div class="event-item" style="border-color:rgba(239,68,68,0.2);">
+                    <div class="event-dot" style="background:var(--red)"></div>
+                    <div style="flex:1">
+                        <div class="ev-title">${a.type}</div>
+                        <div class="ev-meta">${a.location} · Conditie ${a.condition}/10 · ${a.brand || '–'}</div>
                     </div>
-                `;
-            } else {
-                // Placeholder voor Events tab
-                container.innerHTML = `<div class="fade-in flex items-center justify-center h-full text-slate-500 italic">Details voor ${currentView} view...</div>`;
+                    <span class="badge badge-critical">Conditie ${a.condition}/10</span>
+                </div>
+            `).join('')}
+        </div>` : ''}
+
+        <!-- AI Strategic advice teaser -->
+        <div class="strategy-card">
+            <div class="strategy-badge"><i class="fa-solid fa-sparkles"></i> H3 AI INTEL</div>
+            <h4>Strategisch Advies beschikbaar</h4>
+            <p>Open de AI Intel tab voor geautomatiseerde risicoanalyse, MJOP-optimalisatie en strategische adviezen op basis van het volledige datasetprofiel van dit gebouw — inclusief conditiescores, kostenprojectie en restlevensduur.</p>
+            <button onclick="switchBuildingTab('building-ai')" class="btn-primary" style="margin-top:14px;width:auto;">
+                <i class="fa-solid fa-sparkles"></i> Open AI Intel
+            </button>
+        </div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────
+// BUILDING ASSETS
+// ─────────────────────────────────────────────
+function renderBuildingAssets(b) {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+    <div class="view-pad" style="max-width:1100px;margin:0 auto;">
+        <div class="view-header">
+            <div>
+                <div class="view-title">Asset Inventory</div>
+                <div class="view-subtitle">${b.assets.length} componenten geregistreerd</div>
+            </div>
+            <button class="btn-primary" onclick="openModal('modal-asset')">
+                <i class="fa-solid fa-plus"></i> Add Asset
+            </button>
+        </div>
+
+        <div class="card" style="overflow:hidden;padding:0;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type / Merk</th>
+                        <th>Categorie</th>
+                        <th>Locatie</th>
+                        <th>Geplaatst</th>
+                        <th>Conditie</th>
+                        <th>Waarde</th>
+                        <th>Status</th>
+                        <th>Bron</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${b.assets.length === 0 ? '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px;">Nog geen assets geregistreerd.</td></tr>' :
+                    b.assets.map(a => `
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;font-size:13px;">${a.type}</div>
+                                <div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--muted);">${a.brand || '–'}</div>
+                            </td>
+                            <td><span style="font-size:11px;color:var(--muted);">${a.cat}</span></td>
+                            <td style="font-size:12px;">${a.location}</td>
+                            <td style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);">${a.installed || '–'}</td>
+                            <td>
+                                <div class="gauge-wrap" style="width:120px;">
+                                    <div class="gauge-bar" style="flex:1;">
+                                        <div class="gauge-fill" style="width:${a.condition*10}%;background:${condColor(a.condition)};"></div>
+                                    </div>
+                                    <span style="font-family:\'DM Mono\',monospace;font-size:10px;color:${condColor(a.condition)};min-width:24px;">${a.condition}/10</span>
+                                </div>
+                            </td>
+                            <td style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--gold);">${fmtEur(a.value)}</td>
+                            <td>
+                                <span class="badge ${a.status==='active'?'badge-closed':'badge-open'}">${a.status.replace('_',' ')}</span>
+                            </td>
+                            <td style="vertical-align:middle;">${a.evidence && a.evidence.length ? renderEvidenceControls('asset', b.id, a.id, a.evidence) : '<span style="color:var(--muted);font-size:11px;">—</span>'}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────
+// BUILDING MJOP
+// ─────────────────────────────────────────────
+function renderBuildingMJOP(b) {
+    const content = document.getElementById('content');
+    const byYear = {};
+    b.mjop.forEach(m => { if (!byYear[m.year]) byYear[m.year] = []; byYear[m.year].push(m); });
+    const years = Object.keys(byYear).sort();
+    const totalCost = b.mjop.reduce((s, m) => s + (m.cost||0), 0);
+
+    content.innerHTML = `
+    <div class="view-pad" style="max-width:900px;margin:0 auto;">
+        <div class="view-header">
+            <div>
+                <div class="view-title">MJOP — Meerjarenonderhoudsplan</div>
+                <div class="view-subtitle">${b.mjop.length} items · Totale investering: <span style="color:var(--gold)">${fmtEur(totalCost)}</span></div>
+            </div>
+            <button class="btn-primary" onclick="openMjopModal()">
+                <i class="fa-solid fa-plus"></i> Add MJOP Item
+            </button>
+        </div>
+
+        ${years.length === 0 ? '<div style="color:var(--muted);padding:40px;text-align:center;">Nog geen MJOP items.</div>' : ''}
+
+        <div class="mjop-timeline">
+            ${years.map(yr => `
+                <div style="margin-bottom:28px;">
+                    <div style="font-size:11px;font-family:\'DM Mono\',monospace;color:var(--muted);margin-bottom:10px;font-weight:700;">${yr}</div>
+                    ${byYear[yr].map(m => `
+                        <div class="mjop-item">
+                            <div class="mjop-year">
+                                ${m.year} ·
+                                <span style="color:${m.priority==='high'?'var(--red)':m.priority==='medium'?'var(--amber)':'var(--green)'};">${m.priority.toUpperCase()}</span>
+                            </div>
+                            <div class="mjop-task">${m.task}</div>
+                            <div class="mjop-cost">${fmtEur(m.cost)}</div>
+                            ${m.notes ? `<div style="font-size:11px;font-family:\'Fraunces\',serif;color:var(--muted);margin-top:6px;">${m.notes}</div>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('')}
+        </div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────
+// BUILDING INSPECTIONS
+// ─────────────────────────────────────────────
+function renderBuildingInspections(b) {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+    <div class="view-pad" style="max-width:1100px;margin:0 auto;">
+        <div class="view-header">
+            <div>
+                <div class="view-title">Inspectierapporten</div>
+                <div class="view-subtitle">Upload rapporten, foto's, en laat AI de data verwerken</div>
+            </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:24px;">
+            <div>
+                <div class="section-header"><div class="section-title">Bestaande Inspecties</div></div>
+                ${b.inspections.length === 0 ? '<div style="color:var(--muted);font-size:13px;">Nog geen inspecties geregistreerd.</div>' : ''}
+                ${b.inspections.map(ins => `
+                    <div class="event-item" style="border-left:3px solid ${ins.status==='critical'?'var(--red)':ins.status==='warning'?'var(--amber)':'var(--green)'};">
+                        <div style="flex:1;">
+                            <div class="ev-title">${ins.title}</div>
+                            <div class="ev-meta">${ins.date} · ${ins.images} foto's · ${ins.findings} bevindingen</div>
+                            <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+                                <div class="gauge-bar" style="width:100px;">
+                                    <div class="gauge-fill" style="width:${ins.score*10}%;background:${condColor(ins.score)};"></div>
+                                </div>
+                                <span style="font-size:11px;font-family:\'DM Mono\',monospace;color:${condColor(ins.score)};">${ins.score}/10</span>
+                            </div>
+                        </div>
+                        <span class="badge ${ins.status==='critical'?'badge-critical':ins.status==='warning'?'badge-open':'badge-closed'}">${ins.status}</span>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div>
+                <div class="section-header"><div class="section-title">Upload nieuwe inspectie</div></div>
+                <div class="upload-zone" id="upload-zone">
+                    <input type="file" multiple accept=".pdf,.xlsx,.jpg,.jpeg,.png,.zip" onchange="handleFileUpload(event)">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <h4>Drag &amp; Drop bestanden</h4>
+                    <p>PDF rapporten · Excel MJOP · Foto's (JPG/PNG) · ZIP archives</p>
+                    <p style="margin-top:8px;">Max. 50+ afbeeldingen worden door AI verwerkt</p>
+                </div>
+                <div class="uploaded-file-list" id="upload-list"></div>
+            </div>
+        </div>
+
+        <!-- Photo inspection grid placeholder -->
+        <div class="section">
+            <div class="section-header"><div class="section-title">Foto's</div></div>
+            <div class="inspection-grid">
+                ${Array.from({length:8}).map((_, i) => `
+                    <div class="inspection-thumb">
+                        ${['🏗️','🔩','🪟','🔧','🏠','⚡','🚰','🔥'][i]}
+                        <span class="ith-label">Foto ${i+1}</span>
+                        ${i < 3 ? `<div class="ith-badge" style="background:${i===0?'var(--red)':i===1?'var(--amber)':'var(--green)'};">${i===0?'!':i===1?'~':'✓'}</div>` : ''}
+                    </div>
+                `).join('')}
+                <div class="inspection-thumb" style="border-style:dashed;">
+                    <i class="fa-solid fa-plus" style="font-size:20px;color:var(--muted);"></i>
+                    <span class="ith-label">Upload foto's</span>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    // Drag and drop
+    const zone = document.getElementById('upload-zone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); handleFileDrop(e.dataTransfer.files); });
+}
+
+function handleFileUpload(event) {
+    handleFileDrop(event.target.files);
+}
+
+function handleFileDrop(files) {
+    const list = document.getElementById('upload-list');
+    if (!list) return;
+    Array.from(files).forEach(f => {
+        const item = document.createElement('div');
+        item.className = 'uploaded-file-item';
+        const icons = { pdf: 'fa-file-pdf', xlsx: 'fa-file-excel', jpg: 'fa-image', jpeg: 'fa-image', png: 'fa-image', zip: 'fa-file-zipper' };
+        const ext = f.name.split('.').pop().toLowerCase();
+        item.innerHTML = `
+            <i class="fa-solid ${icons[ext] || 'fa-file'}" style="color:var(--accent)"></i>
+            <span class="fname">${f.name}</span>
+            <span class="fsize">${(f.size/1024).toFixed(0)} KB</span>
+            <i class="fa-solid fa-xmark fremove" onclick="this.parentElement.remove()"></i>
+        `;
+        list.appendChild(item);
+    });
+    if (files.length > 0) {
+        toast(`${files.length} bestand(en) klaar voor AI verwerking`, 'success');
+    }
+}
+
+// ─────────────────────────────────────────────
+// BUILDING DOCUMENTS
+// ─────────────────────────────────────────────
+function renderBuildingDocuments(b) {
+    const content = document.getElementById('content');
+    const docTypeIcon = { inspection: 'fa-magnifying-glass-chart', mjop: 'fa-calendar-days', certificate: 'fa-certificate', contract: 'fa-file-signature', other: 'fa-file' };
+    content.innerHTML = `
+    <div class="view-pad" style="max-width:900px;margin:0 auto;">
+        <div class="view-header">
+            <div>
+                <div class="view-title">Documentdossier</div>
+                <div class="view-subtitle">${b.documents.length} documenten opgeslagen</div>
+            </div>
+        </div>
+
+        <div class="upload-zone" style="margin-bottom:20px;padding:24px;">
+            <input type="file" multiple accept=".pdf,.xlsx,.docx,.jpg,.png,.zip">
+            <i class="fa-solid fa-folder-open" style="font-size:24px;"></i>
+            <h4>Upload Documenten</h4>
+            <p>Inspecties · Contracten · Certificaten · Tekeningen · MJOP's</p>
+        </div>
+
+        <div class="card" style="padding:0;overflow:hidden;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th>Type</th>
+                        <th>Datum</th>
+                        <th>Grootte</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${b.documents.map(d => `
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                    <i class="fa-solid ${docTypeIcon[d.type]||'fa-file'}" style="color:var(--accent);width:16px;"></i>
+                                    <span style="font-size:13px;font-weight:600;">${d.name}</span>
+                                </div>
+                            </td>
+                            <td><span class="badge badge-info">${d.type}</span></td>
+                            <td style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);">${d.date}</td>
+                            <td style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);">${d.size}</td>
+                            <td>
+                                <button class="btn-icon" onclick="toast('Document openen... (integreer met uw DMS)', 'info')" title="Open">
+                                    <i class="fa-solid fa-eye" style="font-size:11px;"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                    ${b.documents.length === 0 ? '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;">Nog geen documenten.</td></tr>' : ''}
+                </tbody>
+            </table>
+        </div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────
+// BUILDING AI INTEL
+// ─────────────────────────────────────────────
+function renderBuildingAI(b) {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+    <div id="ai-panel">
+        <div class="ai-history" id="ai-hist">
+            <div class="ai-msg">
+                <div class="ai-avatar h3"><i class="fa-solid fa-sparkles" style="font-size:13px;"></i></div>
+                <div class="ai-bubble">
+                    <div class="ai-label">H3 AI · ${b.name}</div>
+                    Ik heb toegang tot het volledige H3-dossier van <strong>${b.name}</strong> — ${b.assets.length} assets, ${b.events.length} events, ${b.mjop.length} MJOP-items en ${b.documents.length} documenten.<br><br>
+                    Wat wil je weten? Stel een vraag over conditie, kosten, risico's, strategie of prioriteiten. Je kunt ook MJOP-rapporten, inspectiefoto's of Excel-bestanden uploaden en ik analyseer ze direct.
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-input-area">
+            <div class="ai-quick-prompts">
+                <button class="quick-prompt" onclick="askAI('Geef me een samenvatting van de risico\\'s van dit gebouw')">📊 Risico-overzicht</button>
+                <button class="quick-prompt" onclick="askAI('Welke assets zijn het meest urgent om te vervangen?')">🔧 Urgente assets</button>
+                <button class="quick-prompt" onclick="askAI('Analyseer de MJOP en geef strategisch advies voor de komende 5 jaar')">📅 MJOP analyse</button>
+                <button class="quick-prompt" onclick="askAI('Bereken de totale eigendomskosten (TCO) voor dit gebouw')">💶 TCO berekening</button>
+                <button class="quick-prompt" onclick="askAI('Maak een management rapportage die ik kan presenteren')">📋 Management rapport</button>
+                <button class="quick-prompt" onclick="askAI('Wat is de verwachte waardeontwikkeling op basis van de onderhoudsstatus?')">📈 Waardeontwikkeling</button>
+            </div>
+            <div class="ai-context-chips">
+                <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);align-self:center;">Context:</span>
+                <div class="context-chip on" id="chip-assets" onclick="toggleChip('assets')">Assets (${b.assets.length})</div>
+                <div class="context-chip on" id="chip-mjop" onclick="toggleChip('mjop')">MJOP (${b.mjop.length})</div>
+                <div class="context-chip on" id="chip-events" onclick="toggleChip('events')">Events (${b.events.length})</div>
+                <div class="context-chip" id="chip-docs" onclick="toggleChip('docs')">Docs (${b.documents.length})</div>
+            </div>
+            <div class="ai-input-row">
+                <textarea class="ai-textarea" id="ai-input" placeholder="Stel een vraag over dit gebouw..." rows="1"
+                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAIMessage();}"></textarea>
+                <button class="ai-send-btn" onclick="sendAIMessage()">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>`;
+
+    autoGrowTextarea(document.getElementById('ai-input'));
+}
+
+function autoGrowTextarea(el) {
+    if (!el) return;
+    el.addEventListener('input', () => {
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    });
+}
+
+function toggleChip(ctx) {
+    const chip = document.getElementById('chip-' + ctx);
+    if (!chip) return;
+    const isOn = chip.classList.contains('on');
+    chip.classList.toggle('on', !isOn);
+    if (!isOn) {
+        if (!state.aiContexts.includes(ctx)) state.aiContexts.push(ctx);
+    } else {
+        state.aiContexts = state.aiContexts.filter(c => c !== ctx);
+    }
+}
+
+async function sendAIMessage() {
+    const b = getSelectedBuilding();
+    if (!b) return;
+    const input = document.getElementById('ai-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    input.style.height = 'auto';
+    askAI(msg);
+}
+
+async function askAI(question) {
+    const b = getSelectedBuilding();
+    if (!b) { toast('Selecteer eerst een gebouw', 'error'); return; }
+
+    const hist = document.getElementById('ai-hist');
+    if (!hist) return;
+
+    // User message
+    hist.innerHTML += `
+        <div class="ai-msg" style="flex-direction:row-reverse;">
+            <div class="ai-avatar user"><i class="fa-regular fa-user" style="font-size:12px;"></i></div>
+            <div class="ai-bubble user-bubble">${question}</div>
+        </div>`;
+
+    // Typing indicator
+    const typingId = 'typing-' + Date.now();
+    hist.innerHTML += `
+        <div class="ai-msg" id="${typingId}">
+            <div class="ai-avatar h3"><i class="fa-solid fa-sparkles" style="font-size:13px;"></i></div>
+            <div class="ai-bubble">
+                <div class="ai-label">H3 AI · Analyseert dataset...</div>
+                <div class="ai-typing"><span></span><span></span><span></span></div>
+            </div>
+        </div>`;
+    hist.scrollTop = hist.scrollHeight;
+
+    // Build context
+    const avgCond = b.assets.length ? (b.assets.reduce((s, a) => s + a.condition, 0) / b.assets.length).toFixed(1) : 'N/A';
+    const openEv = b.events.filter(e => e.status === 'open').length;
+    const mjopTotal = b.mjop.reduce((s, m) => s + (m.cost || 0), 0);
+
+    const systemPrompt = `Je bent H3 AI — een specialistische AI property intelligence assistent voor vastgoedbeheer. Je werkt binnen het H3 Core platform dat gebouwdossiers beheert op basis van de H3-architectuur (SPATRO + SENSA framework). Je analyseert gebouwdata en geeft concrete, professionele adviezen aan vastgoedbeheerders en VvE's.
+
+Gebouw context — ${b.name}:
+- Adres: ${b.address}, ${b.city} | Bouwjaar: ${b.year} | GFA: ${b.gfa || 'N/A'} m² | WOZ/Marktwaarde: ${fmtEur(b.value)}
+- BAG ID: ${b.bag || 'N/A'}
+- Beschrijving: ${b.desc || 'N/A'}
+
+ASSETS (${b.assets.length}):
+${b.assets.map(a => `  • ${a.type} [${a.cat}] — Locatie: ${a.location}, Conditie: ${a.condition}/10, Geplaatst: ${a.installed}, Levensduur: ${a.lifespan}jr, Vervangingswaarde: ${fmtEur(a.value)}, Status: ${a.status}`).join('\n')}
+
+EVENTS (${b.events.length}, ${openEv} open):
+${b.events.map(e => `  • [${e.status.toUpperCase()}] ${e.type} — ${e.date}: ${e.desc} (kosten: ${fmtEur(e.cost)}, contractor: ${e.contractor || 'onbekend'})`).join('\n')}
+
+MJOP (${b.mjop.length} items, totaal ${fmtEur(mjopTotal)}):
+${b.mjop.map(m => `  • ${m.year} [${m.priority}] ${m.task} — ${fmtEur(m.cost)} | ${m.notes || ''}`).join('\n')}
+
+GEMIDDELDE CONDITIESCORE: ${avgCond}/10
+
+Antwoord altijd in het Nederlands (tenzij gevraagd in het Engels). Wees concreet, gebruik getallen, geef prioriteiten. Gebruik markdown voor structuur als dat helpt. Je mag ook tabellen gebruiken. Geef als vastgoedexpert specifieke, bruikbare adviezen.`;
+
+    try {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 1000,
+                system: systemPrompt,
+                messages: [{ role: "user", content: question }]
+            })
+        });
+
+        const data = await response.json();
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+
+        let answer = '';
+        if (data.content && data.content.length > 0) {
+            answer = data.content.map(c => c.text || '').join('');
+        } else if (data.error) {
+            answer = `⚠️ API Fout: ${data.error.message}. Controleer je API-verbinding.`;
+        }
+
+        // Simple markdown to HTML
+        answer = answer
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/^### (.*$)/gm, '<h4 style="font-size:13px;font-weight:700;margin:10px 0 4px;color:var(--accent);">$1</h4>')
+            .replace(/^## (.*$)/gm, '<h3 style="font-size:14px;font-weight:700;margin:12px 0 6px;">$1</h3>')
+            .replace(/^- (.*$)/gm, '<li style="margin-left:16px;margin-bottom:3px;">$1</li>')
+            .replace(/\n\n/g, '<br><br>')
+            .replace(/\n/g, '<br>');
+
+        hist.innerHTML += `
+            <div class="ai-msg">
+                <div class="ai-avatar h3"><i class="fa-solid fa-sparkles" style="font-size:13px;"></i></div>
+                <div class="ai-bubble">
+                    <div class="ai-label">H3 AI · ${b.name}</div>
+                    ${answer}
+                </div>
+            </div>`;
+        hist.scrollTop = hist.scrollHeight;
+
+    } catch(err) {
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+        hist.innerHTML += `
+            <div class="ai-msg">
+                <div class="ai-avatar h3"><i class="fa-solid fa-sparkles"></i></div>
+                <div class="ai-bubble" style="border-color:rgba(239,68,68,0.3);">
+                    <div class="ai-label">H3 AI · Verbindingsfout</div>
+                    Kon geen verbinding maken met de AI engine. Controleer de API-sleutel en internetverbinding.<br>
+                    <small style="color:var(--muted);font-family:'DM Mono',monospace;">${err.message}</small>
+                </div>
+            </div>`;
+        hist.scrollTop = hist.scrollHeight;
+    }
+}
+
+// ─────────────────────────────────────────────
+// GLOBAL AI VIEW
+// ─────────────────────────────────────────────
+function renderGlobalAI() {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+    <div id="ai-panel">
+        <div class="ai-history" id="ai-hist">
+            <div class="ai-msg">
+                <div class="ai-avatar h3"><i class="fa-solid fa-sparkles"></i></div>
+                <div class="ai-bubble">
+                    <div class="ai-label">H3 AI · Portfolio Advisor</div>
+                    Ik heb toegang tot het volledige portfolio van <strong>${state.buildings.length} gebouwen</strong>. Ik kan cross-portfolio analyses uitvoeren, prioriteiten stellen over gebouwen heen, budgetoptimalisatie adviseren, en strategische beslissingen ondersteunen voor management.<br><br>
+                    Beschikbare gebouwen: ${state.buildings.map(b => `<strong>${b.name}</strong>`).join(', ') || '–'}
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-input-area">
+            <div class="ai-quick-prompts">
+                <button class="quick-prompt" onclick="askGlobalAI('Geef een portfolio-brede risicoanalyse')">🏢 Portfolio risico</button>
+                <button class="quick-prompt" onclick="askGlobalAI('Welk gebouw heeft de meest urgente aandacht nodig?')">⚡ Prioritering</button>
+                <button class="quick-prompt" onclick="askGlobalAI('Maak een geconsolideerde MJOP budget prognose voor 5 jaar')">💶 Budget prognose</button>
+                <button class="quick-prompt" onclick="askGlobalAI('Analyseer de conditie van alle gebouwen en vergelijk ze')">📊 Conditie vergelijking</button>
+            </div>
+            <div class="ai-input-row">
+                <textarea class="ai-textarea" id="ai-input" placeholder="Stel een portfolio-brede vraag..." rows="1"
+                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();askGlobalAI(document.getElementById('ai-input').value);}"></textarea>
+                <button class="ai-send-btn" onclick="askGlobalAI(document.getElementById('ai-input').value)">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>`;
+    autoGrowTextarea(document.getElementById('ai-input'));
+}
+
+async function askGlobalAI(question) {
+    if (!question || !question.trim()) return;
+    const hist = document.getElementById('ai-hist');
+    const input = document.getElementById('ai-input');
+    if (input) { input.value = ''; input.style.height = 'auto'; }
+
+    hist.innerHTML += `
+        <div class="ai-msg" style="flex-direction:row-reverse;">
+            <div class="ai-avatar user"><i class="fa-regular fa-user" style="font-size:12px;"></i></div>
+            <div class="ai-bubble user-bubble">${question}</div>
+        </div>`;
+
+    const typingId = 'typing-' + Date.now();
+    hist.innerHTML += `
+        <div class="ai-msg" id="${typingId}">
+            <div class="ai-avatar h3"><i class="fa-solid fa-sparkles"></i></div>
+            <div class="ai-bubble">
+                <div class="ai-label">H3 AI · Portfolio analyse...</div>
+                <div class="ai-typing"><span></span><span></span><span></span></div>
+            </div>
+        </div>`;
+    hist.scrollTop = hist.scrollHeight;
+
+    const portfolioContext = state.buildings.map(b => {
+        const avgCond = b.assets.length ? (b.assets.reduce((s, a) => s + a.condition, 0) / b.assets.length).toFixed(1) : 'N/A';
+        const openEv = b.events.filter(e => e.status === 'open').length;
+        const mjopTotal = b.mjop.reduce((s, m) => s + (m.cost || 0), 0);
+        return `\n--- ${b.name} [${b.type}] ---\nAdres: ${b.address}, ${b.city} | Bouwjaar: ${b.year} | GFA: ${b.gfa||'N/A'} m² | WOZ: ${fmtEur(b.value)}\nAssets: ${b.assets.length} (gem. conditie ${avgCond}/10) | Open events: ${openEv} | MJOP totaal: ${fmtEur(mjopTotal)}\nAssets: ${b.assets.map(a => `${a.type} (${a.condition}/10)`).join(', ')}\nUrgente MJOP: ${b.mjop.filter(m => m.priority === 'high').map(m => `${m.task} ${m.year} ${fmtEur(m.cost)}`).join('; ') || 'geen'}`;
+    }).join('\n');
+
+    const systemPrompt = `Je bent H3 AI — een specialistische vastgoed intelligence AI. Je analyseert een portfolio van ${state.buildings.length} gebouwen en geeft strategische adviezen op portfolio-niveau. Antwoord altijd in het Nederlands, gebruik markdown voor structuur, en wees concreet met getallen en prioriteiten.\n\nPORTFOLIO OVERZICHT:${portfolioContext}`;
+
+    try {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 1000,
+                system: systemPrompt,
+                messages: [{ role: "user", content: question }]
+            })
+        });
+
+        const data = await response.json();
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+
+        let answer = data.content?.[0]?.text || data.error?.message || 'Onbekende fout';
+        answer = answer
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/^### (.*$)/gm, '<h4 style="font-size:13px;font-weight:700;margin:10px 0 4px;color:var(--accent);">$1</h4>')
+            .replace(/^## (.*$)/gm, '<h3 style="font-size:14px;font-weight:700;margin:12px 0 6px;">$1</h3>')
+            .replace(/^- (.*$)/gm, '<li style="margin-left:16px;margin-bottom:3px;">$1</li>')
+            .replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+
+        hist.innerHTML += `
+            <div class="ai-msg">
+                <div class="ai-avatar h3"><i class="fa-solid fa-sparkles"></i></div>
+                <div class="ai-bubble">
+                    <div class="ai-label">H3 AI · Portfolio Analyse</div>
+                    ${answer}
+                </div>
+            </div>`;
+        hist.scrollTop = hist.scrollHeight;
+    } catch(err) {
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+        hist.innerHTML += `<div class="ai-msg"><div class="ai-avatar h3"><i class="fa-solid fa-sparkles"></i></div><div class="ai-bubble">Fout: ${err.message}</div></div>`;
+    }
+}
+
+// ─────────────────────────────────────────────
+// TOPDESK VIEW
+// ─────────────────────────────────────────────
+function renderTopdeskView() {
+    const content = document.getElementById('content');
+    const priorityColors = { critical: 'var(--red)', high: 'var(--amber)', medium: 'var(--cyan)', low: 'var(--muted)' };
+    content.innerHTML = `
+    <div class="view-pad" style="max-width:1000px;margin:0 auto;">
+        <div class="view-header">
+            <div>
+                <div class="view-title">Service Calls — TopDesk</div>
+                <div class="view-subtitle">${state.topdeskCalls.length} meldingen · Integreer met TopDesk API voor live sync</div>
+            </div>
+            <button class="btn-primary" onclick="toast('TopDesk API integratie: configureer webhook in settings', 'info')">
+                <i class="fa-solid fa-plug"></i> Connect TopDesk
+            </button>
+        </div>
+
+        <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;">
+            ${['open','in_progress','closed','critical'].map(s => {
+                const cnt = state.topdeskCalls.filter(c => s === 'critical' ? c.priority === 'critical' : c.status === s).length;
+                const labels = { open: 'Open', in_progress: 'In Progress', closed: 'Gesloten', critical: 'Kritiek' };
+                const colors = { open: 'var(--amber)', in_progress: 'var(--cyan)', closed: 'var(--green)', critical: 'var(--red)' };
+                return `
+                <div class="stat-card">
+                    <div class="stat-label">${labels[s]}</div>
+                    <div class="stat-value" style="color:${colors[s]};">${cnt}</div>
+                </div>`;
+            }).join('')}
+        </div>
+
+        ${state.topdeskCalls.map(c => `
+            <div class="topdesk-item" style="border-left-color:${priorityColors[c.priority]||'var(--border)'}">
+                <div class="td-id">${c.id} · ${c.priority.toUpperCase()} · ${c.buildingRef}</div>
+                <div class="td-title">${c.title}</div>
+                <div class="td-meta">${c.date} · ${c.desc}</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+                    <span class="badge ${c.status==='open'?'badge-open':c.status==='in_progress'?'badge-info':'badge-closed'}">${c.status.replace('_',' ')}</span>
+                    ${c.assignee ? `<span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);">→ ${c.assignee}</span>` : ''}
+                </div>
+            </div>
+        `).join('')}
+    </div>`;
+}
+
+// ─────────────────────────────────────────────
+// REPORTS VIEW
+// ─────────────────────────────────────────────
+function renderReportsView() {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+    <div class="view-pad" style="max-width:1000px;margin:0 auto;">
+        <div class="view-header">
+            <div>
+                <div class="view-title">Rapporten &amp; Exports</div>
+                <div class="view-subtitle">Genereer management rapportages, exports en analyses</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            ${[
+                { icon: '📊', title: 'Portfolio Management Rapport', desc: 'Volledig overzicht van alle gebouwen, conditie, risico\'s en kosten', action: () => exportData(), label: 'Genereer PDF' },
+                { icon: '📅', title: 'Geconsolideerde MJOP Export', desc: 'MJOP items over alle gebouwen geëxporteerd als Excel', action: () => exportData(), label: 'Download Excel' },
+                { icon: '⚠️', title: 'Risico Matrix', desc: 'Overzicht van alle assets met conditie < 5 over het portfolio', action: () => exportData(), label: 'Genereer Rapport' },
+                { icon: '💶', title: 'TCO Analyse', desc: 'Total Cost of Ownership berekening per gebouw en portfolio-breed', action: () => exportData(), label: 'Berekenen' },
+                { icon: '🤖', title: 'AI Management Advies', desc: 'Laat H3 AI een volledig strategisch advies genereren', action: () => switchMainView('ai'), label: 'Open AI' },
+                { icon: '📤', title: 'H3 JSON Export', desc: 'Exporteer het volledige H3 datamodel als JSON pakket', action: () => exportData(), label: 'Download JSON' }
+            ].map(r => `
+                <div class="card" style="cursor:pointer;" onclick="">
+                    <div style="font-size:28px;margin-bottom:10px;">${r.icon}</div>
+                    <div style="font-size:14px;font-weight:700;margin-bottom:6px;">${r.title}</div>
+                    <div style="font-size:12px;color:var(--muted);font-family:'Fraunces',serif;line-height:1.5;margin-bottom:14px;">${r.desc}</div>
+                    <button class="btn-primary" style="width:auto;" onclick="exportData()">
+                        <i class="fa-solid fa-arrow-right"></i> ${r.label}
+                    </button>
+                </div>
+            `).join('')}
+        </div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────
+// MODALS
+// ─────────────────────────────────────────────
+function openModal(id) {
+    document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+}
+
+function openAddBuildingModal() {
+    openModal('modal-building');
+}
+
+function openEventModal() {
+    const b = getSelectedBuilding();
+    if (!b) return;
+    // populate asset select
+    const sel = document.getElementById('e-asset');
+    sel.innerHTML = '<option value="">— Geen specifiek asset —</option>' + b.assets.map(a => `<option value="${a.id}">${a.type} (${a.location})</option>`).join('');
+    document.getElementById('e-date').value = new Date().toISOString().split('T')[0];
+    openModal('modal-event');
+}
+
+function openMjopModal() {
+    const b = getSelectedBuilding();
+    if (!b) return;
+    const sel = document.getElementById('m-asset');
+    sel.innerHTML = '<option value="">— Geen specifiek asset —</option>' + b.assets.map(a => `<option value="${a.id}">${a.type}</option>`).join('');
+    openModal('modal-mjop');
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('open');
+    });
+});
+
+// ─────────────────────────────────────────────
+// SAVE ACTIONS
+// ─────────────────────────────────────────────
+function saveBuilding() {
+    const name = document.getElementById('b-name').value.trim();
+    if (!name) { toast('Vul een naam in', 'error'); return; }
+
+    const building = {
+        id: h3id(),
+        name,
+        type: document.getElementById('b-type').value,
+        address: document.getElementById('b-address').value,
+        city: document.getElementById('b-city').value,
+        postal: document.getElementById('b-postal').value,
+        year: parseInt(document.getElementById('b-year').value) || null,
+        bag: document.getElementById('b-bag').value,
+        gfa: parseInt(document.getElementById('b-gfa').value) || null,
+        value: parseInt(document.getElementById('b-value').value) || null,
+        desc: document.getElementById('b-desc').value,
+        assets: [], events: [], mjop: [], documents: [], inspections: []
+    };
+
+    state.buildings.push(building);
+    saveState();
+    renderSidebar();
+    closeModal('modal-building');
+    toast(`${building.name} geregistreerd!`, 'success');
+
+    // clear
+    ['b-name','b-address','b-city','b-postal','b-year','b-bag','b-gfa','b-value','b-desc'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+
+    selectBuilding(building.id);
+}
+
+function saveAsset() {
+    const b = getSelectedBuilding();
+    if (!b) return;
+    const type = document.getElementById('a-type').value.trim();
+    if (!type) { toast('Vul een asset type in', 'error'); return; }
+
+    const asset = {
+        id: h3id(),
+        type,
+        cat: document.getElementById('a-cat').value,
+        location: document.getElementById('a-location').value,
+        brand: document.getElementById('a-brand').value,
+        installed: document.getElementById('a-installed').value,
+        lifespan: parseInt(document.getElementById('a-lifespan').value) || null,
+        condition: parseInt(document.getElementById('a-condition').value) || 8,
+        value: parseInt(document.getElementById('a-value').value) || null,
+        notes: document.getElementById('a-notes').value,
+        status: 'active'
+    };
+
+    b.assets.push(asset);
+    saveState();
+    renderSidebar();
+    closeModal('modal-asset');
+    renderContent();
+    toast(`Asset '${type}' opgeslagen!`, 'success');
+}
+
+function saveEvent() {
+    const b = getSelectedBuilding();
+    if (!b) return;
+    const desc = document.getElementById('e-desc').value.trim();
+    if (!desc) { toast('Voer een omschrijving in', 'error'); return; }
+
+    const event = {
+        id: h3id(),
+        type: document.getElementById('e-type').value,
+        assetId: document.getElementById('e-asset').value || null,
+        date: document.getElementById('e-date').value,
+        cost: parseInt(document.getElementById('e-cost').value) || 0,
+        desc,
+        status: document.getElementById('e-status').value,
+        contractor: document.getElementById('e-contractor').value
+    };
+
+    b.events.push(event);
+    saveState();
+    renderSidebar();
+    closeModal('modal-event');
+    renderContent();
+    toast('Event gelogd!', 'success');
+}
+
+function saveMjopItem() {
+    const b = getSelectedBuilding();
+    if (!b) return;
+    const task = document.getElementById('m-task').value.trim();
+    if (!task) { toast('Vul een taak in', 'error'); return; }
+
+    const item = {
+        id: h3id(),
+        task,
+        year: parseInt(document.getElementById('m-year').value) || new Date().getFullYear(),
+        cost: parseInt(document.getElementById('m-cost').value) || 0,
+        priority: document.getElementById('m-priority').value,
+        assetId: document.getElementById('m-asset').value || null,
+        notes: document.getElementById('m-notes').value
+    };
+
+    b.mjop.push(item);
+    saveState();
+    closeModal('modal-mjop');
+    renderContent();
+    toast('MJOP item toegevoegd!', 'success');
+}
+
+// ─────────────────────────────────────────────
+// EXPORT
+// ─────────────────────────────────────────────
+function exportCurrentData() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+        h3_version: "2.0.0",
+        exported: new Date().toISOString(),
+        framework: "SPATRO+SENSA",
+        buildings: state.buildings
+    }, null, 2));
+    const a = document.createElement('a');
+    a.setAttribute("href", dataStr);
+    a.setAttribute("download", `h3_export_${new Date().getTime()}.json`);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    toast('H3 pakket geëxporteerd!', 'success');
+}
+
+function exportData() { exportCurrentData(); }
+
+function importData() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const parsed = JSON.parse(ev.target.result);
+                if (parsed.buildings) {
+                    state.buildings = parsed.buildings;
+                    saveState();
+                    renderSidebar();
+                    renderContent();
+                    toast(`${parsed.buildings.length} gebouwen geïmporteerd!`, 'success');
+                } else {
+                    toast('Ongeldig H3 JSON formaat', 'error');
+                }
+            } catch(err) {
+                toast('Fout bij importeren: ' + err.message, 'error');
             }
-        }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
 
-        // 4. ADD ASSET (IN-MEMORY "SAVE" DEMO)
-        const modal = document.getElementById('asset-modal');
-        const modalContent = document.getElementById('asset-modal-content');
+// ─────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────
+function toast(msg, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    const icons = { success: 'fa-check-circle', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+    el.innerHTML = `<i class="fa-solid ${icons[type]||'fa-info'}"></i> ${msg}`;
+    container.appendChild(el);
+    setTimeout(() => el.classList.add('show'), 10);
+    setTimeout(() => {
+        el.classList.remove('show');
+        setTimeout(() => el.remove(), 300);
+    }, 3500);
+}
 
-        function openAddAssetModal() {
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modalContent.classList.remove('scale-95');
-            }, 10);
-        }
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+loadState();
 
-        function closeAddAssetModal() {
-            modal.classList.add('opacity-0');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                // clear inputs
-                document.getElementById('new-asset-type').value = '';
-                document.getElementById('new-asset-space').value = '';
-            }, 300);
-        }
-
-        function saveNewAsset() {
-            const type = document.getElementById('new-asset-type').value;
-            const space = document.getElementById('new-asset-space').value;
-            const condition = document.getElementById('new-asset-condition').value;
-
-            if(!type) return alert("Please enter an asset type");
-
-            // Voeg toe aan ons 'werkgeheugen' (H3 data object)
-            const newId = `A-00${h3Data.assets.length + 1}`;
-            h3Data.assets.push({
-                id: newId,
-                type: type,
-                location: space || "Unknown",
-                condition: parseInt(condition),
-                status: "active",
-                installed: new Date().toISOString().split('T')[0]
-            });
-
-            closeAddAssetModal();
-            
-            // Als we op de assets tab zitten, ververs deze direct
-            if(currentView === 'assets' || currentView === 'dashboard') {
-                renderView();
-            }
-
-            // Simuleer een succesvolle "save" notificatie
-            showToast(`Asset ${newId} saved to memory!`);
-        }
-
-        // 5. EXPORT FUNCTION (Dit is de magische oplossing voor lokale apps!)
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(h3Data, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href",     dataStr);
-            downloadAnchorNode.setAttribute("download", "h3_export_" + new Date().getTime() + ".json");
-            document.body.appendChild(downloadAnchorNode); // required for firefox
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            
-            showToast("H3 Package gedownload!");
-        }
-
-        // Helper: Simple Toast Notification
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = "fixed bottom-8 right-8 bg-brand-500 text-slate-900 px-6 py-3 rounded-xl font-medium shadow-lg shadow-brand-500/20 transform transition-all translate-y-10 opacity-0 z-50";
-            toast.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i> ${message}`;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); }, 10);
-            setTimeout(() => { 
-                toast.classList.add('translate-y-10', 'opacity-0'); 
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Initialize
-        loadLocalFiles();
-
-    </script>
+</script>
 </body>
 </html>

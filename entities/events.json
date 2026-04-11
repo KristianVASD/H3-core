@@ -14,7 +14,15 @@
       "resolved_at": "2026-02-12T12:00:00Z",
       "resolved_by": "contractor_001",
       "action_taken": "Afstelling deurdranger"
-    }
+    },
+    "evidence": [
+      {
+        "source_id": "src_meerwerk_001",
+        "note": "Melding gekoppeld aan deurdranger uit meerwerklijst",
+        "confidence": 0.88,
+        "extracted_by": "user_input"
+      }
+    ]
   },
   {
     "schema_version": "1.0",
@@ -25,6 +33,206 @@
     "description": "Eerste jaarlijkse inspectie",
     "reported_at": "2026-03-01T10:00:00Z",
     "status": "closed",
-    "severity": "low"
+    "severity": "low",
+    "evidence": [
+      {
+        "source_id": "src_keuring_cv_001",
+        "note": "Inspectie afgerond — rapportdatum gelijk aan eventdatum",
+        "confidence": 0.99,
+        "extracted_by": "agent_document_v1"
+      }
+    ]
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "event_003",
+    "asset_id": "NL.BAG.0599010000234567:roof:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "event_type": "failure",
+    "description": "Lekkage dakbedekking zuidoosthoek vastgesteld tijdens inspectie",
+    "reported_at": "2026-03-15T10:00:00Z",
+    "status": "open",
+    "severity": "high"
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "event_004",
+    "asset_id": "NL.BAG.0599010000234567:hvac:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "event_type": "maintenance",
+    "description": "Jaarlijkse preventieve onderhoudsbeurt HVAC systeem",
+    "reported_at": "2026-01-10T10:00:00Z",
+    "status": "closed",
+    "severity": "low",
+    "resolution": {
+      "resolved_at": "2026-01-10T16:00:00Z",
+      "resolved_by": "TechniService BV",
+      "action_taken": "Preventief onderhoud"
+    },
+    "evidence": [
+      {
+        "source_id": "src_onderhoudscontract_hvac_001",
+        "note": "Servicebeurt conform onderhoudscontract HVAC",
+        "confidence": 0.97,
+        "extracted_by": "agent_document_v1"
+      }
+    ]
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "event_005",
+    "asset_id": "NL.BAG.0599010000234567:lift:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "event_type": "inspection",
+    "description": "Liftkeur door SBT certificeringsinstelling",
+    "reported_at": "2025-11-20T10:00:00Z",
+    "status": "closed",
+    "severity": "low",
+    "resolution": {
+      "resolved_at": "2025-11-20T14:00:00Z",
+      "resolved_by": "SBT Liftkeuringen",
+      "action_taken": "Keuring uitgevoerd"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "event_006",
+    "asset_id": "NL.BAG.0363010001234567:facade:001",
+    "building_id": "NL.BAG.0363010001234567",
+    "event_type": "inspection",
+    "description": "Bouwkundige conditiemeting NEN 2767 geheel complex",
+    "reported_at": "2025-10-01T10:00:00Z",
+    "status": "closed",
+    "severity": "medium",
+    "resolution": {
+      "resolved_at": "2025-10-15T10:00:00Z",
+      "resolved_by": "Interplan Bouwadvies",
+      "action_taken": "Conditiemeting afgerond"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "mjop_001",
+    "asset_id": "NL.BAG.0599010000234567:roof:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "event_type": "replacement",
+    "description": "Vervanging dakbedekking EPDM",
+    "reported_at": "2026-01-01T00:00:00Z",
+    "status": "open",
+    "severity": "high",
+    "metadata": {
+      "planned_year": 2026,
+      "estimated_cost": 45000,
+      "is_mjop": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "mjop_002",
+    "asset_id": "NL.BAG.0599010000234567:lift:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "event_type": "maintenance",
+    "description": "Revisie Otis lift",
+    "reported_at": "2027-01-01T00:00:00Z",
+    "status": "open",
+    "severity": "high",
+    "metadata": {
+      "planned_year": 2027,
+      "estimated_cost": 22000,
+      "is_mjop": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "TD-2026-0441",
+    "asset_id": "NL.BAG.0599010000234567:hvac:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "event_type": "complaint",
+    "description": "CV installatie storing verdieping 4. Meerdere huurders melden geen verwarming op verd. 4.",
+    "reported_at": "2026-03-28T10:00:00Z",
+    "status": "open",
+    "severity": "high",
+    "reported_by": "Tenant",
+    "metadata": {
+      "source": "TopDesk",
+      "assignee": "J. de Boer"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "TD-2026-0438",
+    "asset_id": "NL.BAG.0599010000234567:lift:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "event_type": "failure",
+    "description": "Lift staat stil - noodgeval. Lift bleef steken met 2 personen.",
+    "reported_at": "2026-03-22T10:00:00Z",
+    "status": "closed",
+    "severity": "critical",
+    "metadata": {
+      "source": "TopDesk",
+      "assignee": "M. Visser"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "mjop_003",
+    "asset_id": "NL.BAG.0363010001234567:facade:001",
+    "building_id": "NL.BAG.0363010001234567",
+    "event_type": "maintenance",
+    "description": "Voegwerk herstel buitengevel",
+    "reported_at": "2025-01-01T00:00:00Z",
+    "status": "open",
+    "severity": "medium",
+    "metadata": {
+      "planned_year": 2025,
+      "estimated_cost": 32000,
+      "is_mjop": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "mjop_004",
+    "asset_id": "NL.BAG.0363010001234567:facade:001",
+    "building_id": "NL.BAG.0363010001234567",
+    "event_type": "replacement",
+    "description": "Vervanging kozijnen houtrot",
+    "reported_at": "2028-01-01T00:00:00Z",
+    "status": "open",
+    "severity": "medium",
+    "metadata": {
+      "planned_year": 2028,
+      "estimated_cost": 55000,
+      "is_mjop": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "TD-2026-0421",
+    "building_id": "NL.BAG.0363010001234567",
+    "asset_id": "NL.BAG.0363010001234567:facade:001",
+    "event_type": "failure",
+    "description": "Lekkage appartement 14. Lek van dak naar appartement bovenste verdieping.",
+    "reported_at": "2026-03-18T10:00:00Z",
+    "status": "in_progress",
+    "severity": "medium",
+    "metadata": {
+      "source": "TopDesk",
+      "assignee": "R. Smit"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "event_id": "TD-2026-0398",
+    "building_id": "NL.BAG.0363010001234567",
+    "asset_id": "NL.BAG.0363010001234567:facade:001",
+    "event_type": "failure",
+    "description": "Gemeenschappelijke ruimte verlichting defect. Tl-armaturen gang begane grond stuk.",
+    "reported_at": "2026-03-10T10:00:00Z",
+    "status": "open",
+    "severity": "low",
+    "metadata": {
+      "source": "TopDesk",
+      "assignee": "Onbekend"
+    }
   }
 ]

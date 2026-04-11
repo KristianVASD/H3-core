@@ -11,7 +11,15 @@
     "lifecycle": {
       "installed_at": "2025-03-15",
       "expected_lifespan_years": 10
-    }
+    },
+    "evidence": [
+      {
+        "source_id": "src_meerwerk_001",
+        "note": "Deurdranger hydraulisch — bevestigd op pagina 2 meerwerklijst",
+        "confidence": 0.96,
+        "extracted_by": "agent_document_v1"
+      }
+    ]
   },
   {
     "schema_version": "1.0",
@@ -24,7 +32,15 @@
     "specifications": {
       "brand": "IKEA",
       "model": "METOD"
-    }
+    },
+    "evidence": [
+      {
+        "source_id": "src_meerwerk_001",
+        "note": "Keuken METOD — regel referentie op meerwerklijst",
+        "confidence": 0.99,
+        "extracted_by": "user_upload"
+      }
+    ]
   },
   {
     "schema_version": "1.0",
@@ -36,7 +52,15 @@
     "lifecycle": {
       "installed_at": "2025-03-15",
       "expected_lifespan_years": 15
-    }
+    },
+    "evidence": [
+      {
+        "source_id": "src_meerwerk_001",
+        "note": "CV-ketel basisinstallatie — scope meerwerk",
+        "confidence": 0.92,
+        "extracted_by": "agent_document_v1"
+      }
+    ]
   },
   {
     "schema_version": "1.0",
@@ -46,5 +70,124 @@
     "subtype": "triple_glass",
     "status": "active",
     "condition_score": 9.8
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.0599010000234567:hvac:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "type": "Daikin VRV-IV Heat Pump",
+    "category": "Mechanical (HVAC)",
+    "location": { "zone": "Dakinstallatie" },
+    "specifications": {
+      "brand": "Daikin"
+    },
+    "lifecycle": {
+      "installed_at": "2018-04-01",
+      "expected_lifespan_years": 15
+    },
+    "condition_score": 7,
+    "value": 38000,
+    "notes": "Jaarlijkse onderhoudscontract actief",
+    "status": "active",
+    "evidence": [
+      {
+        "source_id": "src_onderhoudscontract_hvac_001",
+        "note": "Contractpagina 1: jaarlijkse service VRV-IV",
+        "confidence": 0.99,
+        "extracted_by": "agent_document_v1"
+      }
+    ]
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.0599010000234567:lift:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "type": "Otis Gen2 Lift",
+    "category": "Elevator / Transport",
+    "location": { "zone": "Liftschacht noord" },
+    "specifications": {
+      "brand": "Otis"
+    },
+    "lifecycle": {
+      "installed_at": "2002-06-15",
+      "expected_lifespan_years": 25
+    },
+    "condition_score": 5,
+    "value": 65000,
+    "notes": "Keuringsrapport verouderd. Revisie nodig.",
+    "status": "maintenance_needed"
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.0599010000234567:sprinkler:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "type": "Sprinklerinstallatie",
+    "category": "Fire Safety",
+    "location": { "zone": "Alle verdiepingen" },
+    "specifications": {
+      "brand": "Tyco"
+    },
+    "lifecycle": {
+      "installed_at": "2002-06-15",
+      "expected_lifespan_years": 30
+    },
+    "condition_score": 8,
+    "value": 42000,
+    "notes": "Jaarlijkse inspectie afgerond",
+    "status": "active"
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.0599010000234567:roof:001",
+    "building_id": "NL.BAG.0599010000234567",
+    "type": "Dakbedekking EPDM",
+    "category": "Roof",
+    "location": { "zone": "Plat dak" },
+    "specifications": {
+      "brand": "Sarnafil"
+    },
+    "lifecycle": {
+      "installed_at": "2012-08-01",
+      "expected_lifespan_years": 20
+    },
+    "condition_score": 4,
+    "value": 28000,
+    "notes": "Lekken geconstateerd bij zuidoosthoek",
+    "status": "maintenance_needed"
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.0363010001234567:boiler:001",
+    "building_id": "NL.BAG.0363010001234567",
+    "type": "CV-ketels (gemeenschappelijk)",
+    "category": "Mechanical (HVAC)",
+    "location": { "zone": "Technische ruimte BG" },
+    "specifications": {
+      "brand": "Remeha"
+    },
+    "lifecycle": {
+      "installed_at": "2019-10-01",
+      "expected_lifespan_years": 15
+    },
+    "condition_score": 9,
+    "value": 18000,
+    "notes": "Nieuw geplaatst na asbestsanering",
+    "status": "active"
+  },
+  {
+    "schema_version": "1.0",
+    "asset_id": "NL.BAG.0363010001234567:facade:001",
+    "building_id": "NL.BAG.0363010001234567",
+    "type": "Buitengevel baksteen",
+    "category": "Facade",
+    "location": { "zone": "Alle gevels" },
+    "lifecycle": {
+      "installed_at": "1978-01-01",
+      "expected_lifespan_years": 50
+    },
+    "condition_score": 6,
+    "value": 120000,
+    "notes": "Voegwerk aangetast, metselwerk ok",
+    "status": "maintenance_needed"
   }
 ]
